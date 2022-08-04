@@ -1,6 +1,6 @@
 # pgvector-elixir
 
-[pgvector](https://github.com/pgvector/pgvector-elixir) examples for Elixir
+[pgvector](https://github.com/pgvector/pgvector) examples for Elixir
 
 [![Build Status](https://github.com/pgvector/pgvector-elixir/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-elixir/actions)
 
