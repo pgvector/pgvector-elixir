@@ -6,6 +6,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: erlef/setup-beam@v1
+      with:
+        otp-version: 25
+        elixir-version: 1.13
     - run: mix deps.get
     - uses: ankane/setup-postgres@v1
       with:
@@ -17,4 +20,4 @@ jobs:
         cd pgvector
         make
         sudo make install
-    - run: mix run example.exs
+    - run: mix run postgrex/example.exs
