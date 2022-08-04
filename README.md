@@ -2,6 +2,8 @@
 
 [pgvector](https://github.com/pgvector/pgvector-elixir) examples for Elixir
 
+[![Build Status](https://github.com/pgvector/pgvector-elixir/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-elixir/actions)
+
 ## Getting Started
 
 Follow the instructions for your database library:
@@ -82,4 +84,7 @@ To get started with development:
 ```sh
 git clone https://github.com/pgvector/pgvector-elixir.git
 cd pgvector-elixir
+mix deps.get
+createdb pgvector_elixir_test
+mix run example.exs
 ```

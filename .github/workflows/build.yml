@@ -1,0 +1,20 @@
+name: build
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: erlef/setup-beam@v1
+    - run: mix deps.get
+    - uses: ankane/setup-postgres@v1
+      with:
+        database: pgvector_elixir_test
+    - run: |
+        sudo apt-get update && sudo apt-get install postgresql-server-dev-14
+        cd /tmp
+        git clone --branch v0.2.7 https://github.com/pgvector/pgvector.git
+        cd pgvector
+        make
+        sudo make install
+    - run: mix run example.exs
