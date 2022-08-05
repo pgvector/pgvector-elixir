@@ -1,5 +1,6 @@
-Postgrex.Types.define(TestApp.PostgrexTypes, [Pgvector.Extensions.Vector], [])
+Postgrex.Types.define(MyApp.PostgrexTypes, [Pgvector.Extensions.Vector], [])
 
-Application.ensure_all_started(:postgrex)
+# needed if postgrex is optional
+# Application.ensure_all_started(:postgrex)
 
 ExUnit.start()

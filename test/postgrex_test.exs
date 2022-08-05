@@ -2,7 +2,7 @@ defmodule PostgrexTest do
   use ExUnit.Case
 
   test "works" do
-    {:ok, pid} = Postgrex.start_link(hostname: "localhost", database: "pgvector_elixir_test", types: TestApp.PostgrexTypes)
+    {:ok, pid} = Postgrex.start_link(hostname: "localhost", database: "pgvector_elixir_test", types: MyApp.PostgrexTypes)
 
     Postgrex.query!(pid, "CREATE EXTENSION IF NOT EXISTS vector", [])
     Postgrex.query!(pid, "DROP TABLE IF EXISTS items", [])
