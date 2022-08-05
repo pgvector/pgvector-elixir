@@ -6,20 +6,20 @@ Supports [Ecto](https://github.com/elixir-ecto/ecto) and [Postgrex](https://gith
 
 [![Build Status](https://github.com/pgvector/pgvector-elixir/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-elixir/actions)
 
-## Getting Started
-
-Follow the instructions for your database library:
-
-- [Ecto](#ecto)
-- [Postgrex](#postgrex)
-
-## Ecto
+## Installation
 
 Add this line to your application’s `mix.exs` under `deps`:
 
 ```elixir
 {:pgvector, "~> 0.1.0"}
 ```
+
+And follow the instructions for your database library:
+
+- [Ecto](#ecto)
+- [Postgrex](#postgrex)
+
+## Ecto
 
 Create `lib/postgrex_types.ex` with:
 
@@ -102,12 +102,6 @@ create index("items", ["factors vector_l2_ops"], using: :ivfflat)
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 ## Postgrex
-
-Add this line to your application’s `mix.exs` under `deps`:
-
-```elixir
-{:pgvector, "~> 0.1.0"}
-```
 
 [Register](https://github.com/elixir-ecto/postgrex#extensions) the extension
 
