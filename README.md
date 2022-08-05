@@ -108,7 +108,7 @@ Postgrex.query!(pid, "INSERT INTO items (factors) VALUES ($1)", [[1, 2, 3]])
 Get the nearest neighbors
 
 ```elixir
-Postgrex.query!(pid, "SELECT * FROM items ORDER BY factors <-> $1 LIMIT 5", [[1, 1, 1]])
+Postgrex.query!(pid, "SELECT * FROM items ORDER BY factors <-> $1 LIMIT 5", [[1, 2, 3]])
 ```
 
 Add an approximate index
