@@ -1,8 +1,13 @@
+Postgrex.Types.define(PostgrexApp.PostgrexTypes, [Pgvector.Extensions.Vector], [])
+
+# needed if postgrex is optional
+# Application.ensure_all_started(:postgrex)
+
 defmodule PostgrexTest do
   use ExUnit.Case
 
   test "works" do
-    {:ok, pid} = Postgrex.start_link(hostname: "localhost", database: "pgvector_elixir_test", types: MyApp.PostgrexTypes)
+    {:ok, pid} = Postgrex.start_link(database: "pgvector_elixir_test", types: PostgrexApp.PostgrexTypes)
 
     Postgrex.query!(pid, "CREATE EXTENSION IF NOT EXISTS vector", [])
     Postgrex.query!(pid, "DROP TABLE IF EXISTS items", [])
