@@ -1,6 +1,8 @@
 # pgvector-elixir
 
-[pgvector](https://github.com/pgvector/pgvector) examples for Elixir
+[pgvector](https://github.com/pgvector/pgvector) support for Elixir
+
+Supports [Ecto](https://github.com/elixir-ecto/ecto) and [Postgrex](https://github.com/elixir-ecto/postgrex)
 
 [![Build Status](https://github.com/pgvector/pgvector-elixir/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-elixir/actions)
 
@@ -9,6 +11,7 @@
 Follow the instructions for your database library:
 
 - [Ecto](#ecto)
+- [Postgrex](#postgrex)
 
 ## Ecto
 
@@ -66,6 +69,52 @@ Add an approximate index in a migration
 
 ```elixir
 create index("items", ["factors vector_l2_ops"], using: :ivfflat)
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
+## Postgrex
+
+Add this line to your application’s `mix.exs` under `deps`:
+
+```elixir
+{:pgvector, "~> 0.1"}
+```
+
+Register the `vector` type
+
+```elixir
+Postgrex.Types.define(MyApp.PostgrexTypes, [Pgvector.Extensions.Vector], [])
+```
+
+And pass it to `start_link`
+
+```elixir
+{:ok, pid} = Postgrex.start_link(types: MyApp.PostgrexTypes)
+```
+
+Create a table
+
+```elixir
+Postgrex.query!(pid, "CREATE TABLE items (factors vector(3))", [])
+```
+
+Insert a vector
+
+```elixir
+Postgrex.query!(pid, "INSERT INTO items (factors) VALUES ($1)", [[1, 2, 3]])
+```
+
+Get the nearest neighbors
+
+```elixir
+Postgrex.query!(pid, "SELECT * FROM items ORDER BY factors <-> $1 LIMIT 5", [[1, 1, 1]])
+```
+
+Add an approximate index
+
+```elixir
+Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (factors vector_l2_ops)")
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
