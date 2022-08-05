@@ -1,4 +1,4 @@
-if Code.ensure_compiled(Postgrex) do
+if Code.ensure_loaded?(Postgrex) do
   defmodule Pgvector.Extensions.Vector do
     import Postgrex.BinaryUtils, warn: false
 

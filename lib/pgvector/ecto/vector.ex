@@ -1,6 +1,7 @@
-if Code.ensure_compiled(Ecto) do
+if Code.ensure_loaded?(Ecto) do
   defmodule Pgvector.Ecto.Vector do
     use Ecto.Type
+
     def type, do: :vector
 
     def cast(value) when is_list(value) do
