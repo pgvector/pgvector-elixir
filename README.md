@@ -139,5 +139,5 @@ git clone https://github.com/pgvector/pgvector-elixir.git
 cd pgvector-elixir
 mix deps.get
 createdb pgvector_elixir_test
-mix run postgrex/example.exs
+mix test
 ```
