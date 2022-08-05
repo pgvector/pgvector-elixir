@@ -81,7 +81,7 @@ Add this line to your application’s `mix.exs` under `deps`:
 {:pgvector, "~> 0.1"}
 ```
 
-Register the `vector` type
+[Register](https://github.com/elixir-ecto/postgrex#extensions) the extension
 
 ```elixir
 Postgrex.Types.define(MyApp.PostgrexTypes, [Pgvector.Extensions.Vector], [])
