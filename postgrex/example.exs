@@ -33,9 +33,9 @@ defmodule Pgvector.Vector do
   end
 end
 
-Postgrex.Types.define(Pgvector.PostgrexTypes, [Pgvector.Vector], [])
+Postgrex.Types.define(MyApp.PostgrexTypes, [Pgvector.Vector], [])
 
-{:ok, pid} = Postgrex.start_link(hostname: "localhost", database: "pgvector_elixir_test", types: Pgvector.PostgrexTypes)
+{:ok, pid} = Postgrex.start_link(hostname: "localhost", database: "pgvector_elixir_test", types: MyApp.PostgrexTypes)
 
 Postgrex.query!(pid, "CREATE EXTENSION IF NOT EXISTS vector", [])
 Postgrex.query!(pid, "DROP TABLE IF EXISTS items", [])
