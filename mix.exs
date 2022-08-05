@@ -23,7 +23,8 @@ defmodule Pgvector.MixProject do
 
   defp package do
     [
-      licenses: ["MIT"]
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/pgvector/pgvector-elixir"}
     ]
   end
 end
