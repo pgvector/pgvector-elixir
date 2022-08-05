@@ -21,7 +21,7 @@ Add this line to your application’s `mix.exs` under `deps`:
 {:pgvector, "~> 0.1.0"}
 ```
 
-Create `lib/postgrex_ex.ex` with:
+Create `lib/postgrex_types.ex` with:
 
 ```elixir
 Postgrex.Types.define(MyApp.PostgrexTypes, [Pgvector.Extensions.Vector] ++ Ecto.Adapters.Postgres.extensions(), [])
