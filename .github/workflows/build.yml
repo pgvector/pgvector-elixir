@@ -20,4 +20,4 @@ jobs:
         cd pgvector
         make
         sudo make install
-    - run: mix run postgrex/example.exs
+    - run: mix test

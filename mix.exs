@@ -5,13 +5,25 @@ defmodule Pgvector.MixProject do
     [
       app: :pgvector,
       version: "0.1.0",
-      deps: deps()
+      elixir: "~> 1.10",
+      deps: deps(),
+      package: package(),
+      name: "pgvector",
+      description: "pgvector support for Elixir",
+      source_url: "https://github.com/pgvector/pgvector-elixir"
     ]
   end
 
   defp deps do
     [
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0", optional: true},
+      {:ex_doc, "~> 0.14", only: :dev, runtime: false}
+    ]
+  end
+
+  defp package do
+    [
+      licenses: ["MIT"]
     ]
   end
 end

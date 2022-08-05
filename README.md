@@ -70,6 +70,10 @@ create index("items", ["factors vector_l2_ops"], using: :ivfflat)
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
+## History
+
+View the [changelog](https://github.com/pgvector/pgvector-elixir/blob/master/CHANGELOG.md)
+
 ## Contributing
 
 Everyone is encouraged to help improve this project. Here are a few ways you can help:
