@@ -114,7 +114,7 @@ Postgrex.query!(pid, "SELECT * FROM items ORDER BY factors <-> $1 LIMIT 5", [[1,
 Add an approximate index
 
 ```elixir
-Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (factors vector_l2_ops)")
+Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (factors vector_l2_ops)", [])
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
