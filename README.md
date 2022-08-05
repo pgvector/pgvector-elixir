@@ -15,6 +15,24 @@ Follow the instructions for your database library:
 
 ## Ecto
 
+Add this line to your application’s `mix.exs` under `deps`:
+
+```elixir
+{:pgvector, "~> 0.1.0"}
+```
+
+Create `lib/postgrex_ex.ex` with:
+
+```elixir
+Postgrex.Types.define(MyApp.PostgrexTypes, [Pgvector.Extensions.Vector] ++ Ecto.Adapters.Postgres.extensions(), [])
+```
+
+And add to `config/config.exs`:
+
+```elixir
+config :my_app, MyApp.Repo, types: MyApp.PostgrexTypes
+```
+
 Create a migration
 
 ```sh
@@ -24,7 +42,7 @@ mix ecto.gen.migration create_vector_extension
 with:
 
 ```elixir
-defmodule App.Repo.Migrations.CreateVectorExtension do
+defmodule MyApp.Repo.Migrations.CreateVectorExtension do
   use Ecto.Migration
 
   def up do
@@ -51,10 +69,20 @@ create table(:items) do
 end
 ```
 
+Update the model
+
+```elixir
+schema "items" do
+  field :factors, Pgvector.Ecto.Vector
+end
+```
+
 Insert a vector
 
 ```elixir
-Ecto.Adapters.SQL.query!(App.Repo, "INSERT INTO items (factors) VALUES ('[1,2,3]')")
+alias MyApp.{Repo, Item}
+
+Repo.insert(%Item{factors: [1, 2, 3]})
 ```
 
 Get the nearest neighbors
@@ -62,7 +90,7 @@ Get the nearest neighbors
 ```elixir
 import Ecto.Query
 
-App.Repo.all(from i in "items", order_by: fragment("factors <-> ?", "[1,2,3]"), limit: 5, select: i.id)
+Repo.all(from i in Item, order_by: fragment("factors <-> ?::vector", [1, 2, 3]), limit: 5)
 ```
 
 Add an approximate index in a migration
@@ -78,7 +106,7 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 Add this line to your application’s `mix.exs` under `deps`:
 
 ```elixir
-{:pgvector, "~> 0.1"}
+{:pgvector, "~> 0.1.0"}
 ```
 
 [Register](https://github.com/elixir-ecto/postgrex#extensions) the extension

@@ -16,6 +16,7 @@ defmodule Pgvector.MixProject do
 
   defp deps do
     [
+      {:ecto_sql, ">= 3.0.0", optional: true},
       {:postgrex, ">= 0.0.0", optional: true},
       {:ex_doc, "~> 0.14", only: :dev, runtime: false}
     ]
