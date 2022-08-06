@@ -1,10 +1,12 @@
 # pgvector-elixir
 
-[pgvector](https://github.com/pgvector/pgvector) support for Elixir
-
-Supports [Ecto](https://github.com/elixir-ecto/ecto) and [Postgrex](https://github.com/elixir-ecto/postgrex)
-
 [![Build Status](https://github.com/pgvector/pgvector-elixir/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-elixir/actions)
+[![Hex Version](https://img.shields.io/hexpm/v/pgvector.svg)](https://hex.pm/packages/pgvector)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/pgvector/)
+
+[pgvector](https://github.com/pgvector/pgvector) support for Elixir.
+
+Supports [Ecto](https://github.com/elixir-ecto/ecto) and [Postgrex](https://github.com/elixir-ecto/postgrex).
 
 ## Installation
 
@@ -33,7 +35,7 @@ And add to `config/config.exs`:
 config :my_app, MyApp.Repo, types: MyApp.PostgrexTypes
 ```
 
-Create a migration
+Create a migration:
 
 ```sh
 mix ecto.gen.migration create_vector_extension
@@ -55,13 +57,13 @@ defmodule MyApp.Repo.Migrations.CreateVectorExtension do
 end
 ```
 
-Run the migration
+Run the migration:
 
 ```sh
 mix ecto.migrate
 ```
 
-You can now use the `vector` type in future migrations
+You can now use the `vector` type in future migrations:
 
 ```elixir
 create table(:items) do
@@ -69,7 +71,7 @@ create table(:items) do
 end
 ```
 
-Update the model
+Update the model:
 
 ```elixir
 schema "items" do
@@ -77,7 +79,7 @@ schema "items" do
 end
 ```
 
-Insert a vector
+Insert a vector:
 
 ```elixir
 alias MyApp.{Repo, Item}
@@ -85,7 +87,7 @@ alias MyApp.{Repo, Item}
 Repo.insert(%Item{factors: [1, 2, 3]})
 ```
 
-Get the nearest neighbors
+Get the nearest neighbors:
 
 ```elixir
 import Ecto.Query
@@ -93,57 +95,57 @@ import Ecto.Query
 Repo.all(from i in Item, order_by: fragment("factors <-> ?::vector", [1, 2, 3]), limit: 5)
 ```
 
-Add an approximate index in a migration
+Add an approximate index in a migration:
 
 ```elixir
 create index("items", ["factors vector_l2_ops"], using: :ivfflat)
 ```
 
-Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance.
 
 ## Postgrex
 
-[Register](https://github.com/elixir-ecto/postgrex#extensions) the extension
+[Register](https://github.com/elixir-ecto/postgrex#extensions) the extension:
 
 ```elixir
 Postgrex.Types.define(MyApp.PostgrexTypes, [Pgvector.Extensions.Vector], [])
 ```
 
-And pass it to `start_link`
+And pass it to `start_link`:
 
 ```elixir
 {:ok, pid} = Postgrex.start_link(types: MyApp.PostgrexTypes)
 ```
 
-Create a table
+Create a table:
 
 ```elixir
 Postgrex.query!(pid, "CREATE TABLE items (factors vector(3))", [])
 ```
 
-Insert a vector
+Insert a vector:
 
 ```elixir
 Postgrex.query!(pid, "INSERT INTO items (factors) VALUES ($1)", [[1, 2, 3]])
 ```
 
-Get the nearest neighbors
+Get the nearest neighbors:
 
 ```elixir
 Postgrex.query!(pid, "SELECT * FROM items ORDER BY factors <-> $1 LIMIT 5", [[1, 2, 3]])
 ```
 
-Add an approximate index
+Add an approximate index:
 
 ```elixir
 Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (factors vector_l2_ops)", [])
 ```
 
-Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance:
 
 ## History
 
-View the [changelog](https://github.com/pgvector/pgvector-elixir/blob/master/CHANGELOG.md)
+View the [changelog](./CHANGELOG.md)
 
 ## Contributing
 
@@ -163,3 +165,10 @@ mix deps.get
 createdb pgvector_elixir_test
 mix test
 ```
+
+## Copyright and License
+
+Copyright (c) 2022 Andrew Kane
+
+This work is free. You can redistribute it and/or modify it under the terms of
+the MIT License. See the [LICENSE.md](./LICENSE.md) file for more details.
