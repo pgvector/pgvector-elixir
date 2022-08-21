@@ -1,12 +1,15 @@
 defmodule Pgvector.MixProject do
   use Mix.Project
 
+  @version "0.1.1"
+
   def project do
     [
       app: :pgvector,
-      version: "0.1.1",
+      version: @version,
       elixir: "~> 1.10",
       deps: deps(),
+      docs: docs(),
       package: package(),
       name: "pgvector",
       description: "pgvector support for Elixir",
@@ -20,6 +23,15 @@ defmodule Pgvector.MixProject do
       {:ecto, "~> 3.0", optional: true},
       {:ecto_sql, "~> 3.0", only: :test},
       {:ex_doc, "~> 0.14", only: :dev, runtime: false}
+    ]
+  end
+
+  defp docs do
+    [
+      api_reference: false,
+      extras: ["README.md"],
+      main: "readme",
+      source_ref: "v#{@version}"
     ]
   end
 
