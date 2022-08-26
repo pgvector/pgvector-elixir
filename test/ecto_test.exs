@@ -18,6 +18,7 @@ defmodule EctoTest do
   use ExUnit.Case
 
   import Ecto.Query
+  import Pgvector.Ecto.Query
 
   test "works" do
     Repo.start_link(database: "pgvector_elixir_test", types: EctoApp.PostgrexTypes, log: false)
@@ -30,8 +31,14 @@ defmodule EctoTest do
     Repo.insert(%Item{factors: [2, 2, 2]})
     Repo.insert(%Item{factors: [1, 1, 2]})
 
-    items = Repo.all(from i in Item, order_by: fragment("factors <-> ?::vector", [1, 1, 1]), limit: 5)
+    items = Repo.all(from i in Item, order_by: l2_distance(i.factors, [1, 1, 1]), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [1, 3, 2]
     assert Enum.map(items, fn v -> v.factors end) == [[1.0, 1.0, 1.0], [1.0, 1.0, 2.0], [2.0, 2.0, 2.0]]
+
+    items = Repo.all(from i in Item, order_by: max_inner_product(i.factors, [1, 1, 1]), limit: 5)
+    assert Enum.map(items, fn v -> v.id end) == [2, 3, 1]
+
+    items = Repo.all(from i in Item, order_by: cosine_distance(i.factors, [1, 1, 1]), limit: 5)
+    assert Enum.map(items, fn v -> v.id end) == [1, 2, 3]
   end
 end
