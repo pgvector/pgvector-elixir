@@ -1,4 +1,4 @@
-## 0.1.2 (unreleased)
+## 0.1.2 (2022-08-26)
 
 - Added distance functions for Ecto
 
