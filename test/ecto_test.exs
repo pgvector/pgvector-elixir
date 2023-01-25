@@ -28,12 +28,12 @@ defmodule EctoTest do
     Ecto.Adapters.SQL.query!(Repo, "CREATE TABLE items (id bigserial primary key, factors vector(3))")
 
     Repo.insert(%Item{factors: [1, 1, 1]})
-    Repo.insert(%Item{factors: [2, 2, 2]})
+    Repo.insert(%Item{factors: [2, 2, 3]})
     Repo.insert(%Item{factors: [1, 1, 2]})
 
     items = Repo.all(from i in Item, order_by: l2_distance(i.factors, [1, 1, 1]), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [1, 3, 2]
-    assert Enum.map(items, fn v -> v.factors end) == [[1.0, 1.0, 1.0], [1.0, 1.0, 2.0], [2.0, 2.0, 2.0]]
+    assert Enum.map(items, fn v -> v.factors end) == [[1.0, 1.0, 1.0], [1.0, 1.0, 2.0], [2.0, 2.0, 3.0]]
 
     items = Repo.all(from i in Item, order_by: max_inner_product(i.factors, [1, 1, 1]), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [2, 3, 1]
@@ -41,8 +41,7 @@ defmodule EctoTest do
     items = Repo.all(from i in Item, order_by: cosine_distance(i.factors, [1, 1, 1]), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [1, 2, 3]
 
-    # Macros allow composition, like deriving the cosine similarity from the cosine distance.
     items = Repo.all(from i in Item, order_by: (1 - cosine_distance(i.factors, [1, 1, 1])), limit: 5)
-    assert Enum.map(items, fn v -> v.id end) == [3, 1, 2]
+    assert Enum.map(items, fn v -> v.id end) == [3, 2, 1]
   end
 end
