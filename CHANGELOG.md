@@ -1,6 +1,6 @@
-## Unreleased
+## 0.1.3 (2023-01-25)
 
-- Wrapped the Ecto.Query macros in parentheses to allow composition like `1 - cosine_distance(x, y)`
+- Fixed composition with distance functions for Ecto
 
 ## 0.1.2 (2022-08-26)
 
