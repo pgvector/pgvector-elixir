@@ -40,5 +40,9 @@ defmodule EctoTest do
 
     items = Repo.all(from i in Item, order_by: cosine_distance(i.factors, [1, 1, 1]), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [1, 2, 3]
+
+    # Macros allow composition, like deriving the cosine similarity from the cosine distance.
+    items = Repo.all(from i in Item, order_by: (1 - cosine_distance(i.factors, [1, 1, 1])), limit: 5)
+    assert Enum.map(items, fn v -> v.id end) == [3, 1, 2]
   end
 end
