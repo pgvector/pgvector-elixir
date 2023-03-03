@@ -65,7 +65,7 @@ You can now use the `vector` type in future migrations
 
 ```elixir
 create table(:items) do
-  add :factors, :vector, size: 3
+  add :embedding, :vector, size: 3
 end
 ```
 
@@ -73,7 +73,7 @@ Update the model
 
 ```elixir
 schema "items" do
-  field :factors, Pgvector.Ecto.Vector
+  field :embedding, Pgvector.Ecto.Vector
 end
 ```
 
@@ -82,7 +82,7 @@ Insert a vector
 ```elixir
 alias MyApp.{Repo, Item}
 
-Repo.insert(%Item{factors: [1, 2, 3]})
+Repo.insert(%Item{embedding: [1, 2, 3]})
 ```
 
 Get the nearest neighbors
@@ -91,7 +91,7 @@ Get the nearest neighbors
 import Ecto.Query
 import Pgvector.Ecto.Query
 
-Repo.all(from i in Item, order_by: l2_distance(i.factors, [1, 2, 3]), limit: 5)
+Repo.all(from i in Item, order_by: l2_distance(i.embedding, [1, 2, 3]), limit: 5)
 ```
 
 Also supports `max_inner_product` and `cosine_distance`
@@ -99,7 +99,7 @@ Also supports `max_inner_product` and `cosine_distance`
 Add an approximate index in a migration
 
 ```elixir
-create index("items", ["factors vector_l2_ops"], using: :ivfflat)
+create index("items", ["embedding vector_l2_ops"], using: :ivfflat)
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
@@ -121,25 +121,25 @@ And pass it to `start_link`
 Create a table
 
 ```elixir
-Postgrex.query!(pid, "CREATE TABLE items (factors vector(3))", [])
+Postgrex.query!(pid, "CREATE TABLE items (embedding vector(3))", [])
 ```
 
 Insert a vector
 
 ```elixir
-Postgrex.query!(pid, "INSERT INTO items (factors) VALUES ($1)", [[1, 2, 3]])
+Postgrex.query!(pid, "INSERT INTO items (embedding) VALUES ($1)", [[1, 2, 3]])
 ```
 
 Get the nearest neighbors
 
 ```elixir
-Postgrex.query!(pid, "SELECT * FROM items ORDER BY factors <-> $1 LIMIT 5", [[1, 2, 3]])
+Postgrex.query!(pid, "SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [[1, 2, 3]])
 ```
 
 Add an approximate index
 
 ```elixir
-Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (factors vector_l2_ops)", [])
+Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (embedding vector_l2_ops)", [])
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
