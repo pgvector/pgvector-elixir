@@ -139,7 +139,7 @@ Postgrex.query!(pid, "SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [[
 Add an approximate index
 
 ```elixir
-Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (embedding vector_l2_ops)", [])
+Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", [])
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance

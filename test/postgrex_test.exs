@@ -20,5 +20,7 @@ defmodule PostgrexTest do
     assert ["id", "embedding"] == result.columns
     assert Enum.map(result.rows, fn v -> Enum.at(v, 0) end) == [1, 3, 2]
     assert Enum.map(result.rows, fn v -> Enum.at(v, 1) end) == [[1.0, 1.0, 1.0], [1.0, 1.0, 2.0], [2.0, 2.0, 2.0]]
+
+    Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", [])
   end
 end
