@@ -8,7 +8,7 @@ jobs:
       - uses: erlef/setup-beam@v1
         with:
           otp-version: 25
-          elixir-version: 1.13
+          elixir-version: 1.14
       - run: mix deps.get
       - uses: ankane/setup-postgres@v1
         with:
@@ -16,7 +16,7 @@ jobs:
           dev-files: true
       - run: |
           cd /tmp
-          git clone --branch v0.4.0 https://github.com/pgvector/pgvector.git
+          git clone --branch v0.4.1 https://github.com/pgvector/pgvector.git
           cd pgvector
           make
           sudo make install
