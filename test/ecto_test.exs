@@ -29,7 +29,7 @@ defmodule EctoTest do
 
     Repo.insert(%Item{embedding: [1, 1, 1]})
     Repo.insert(%Item{embedding: [2, 2, 3]})
-    Repo.insert(%Item{embedding: [1, 1, 2]})
+    Repo.insert(%Item{embedding: Nx.tensor([1, 1, 2], type: :f32)})
 
     items = Repo.all(from i in Item, order_by: l2_distance(i.embedding, [1, 1, 1]), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [1, 3, 2]

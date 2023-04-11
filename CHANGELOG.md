@@ -1,3 +1,7 @@
+## 0.1.4 (unreleased)
+
+- Added conversion for Nx tensors
+
 ## 0.1.3 (2023-01-25)
 
 - Fixed composition with distance functions for Ecto
