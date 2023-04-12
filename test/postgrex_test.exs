@@ -13,7 +13,7 @@ defmodule PostgrexTest do
     Postgrex.query!(pid, "DROP TABLE IF EXISTS items", [])
     Postgrex.query!(pid, "CREATE TABLE items (id bigserial primary key, embedding vector(3))", [])
 
-    Postgrex.query!(pid, "INSERT INTO items (embedding) VALUES ($1), ($2), ($3)", [[1, 1, 1], [2, 2, 2], [1, 1, 2]])
+    Postgrex.query!(pid, "INSERT INTO items (embedding) VALUES ($1), ($2), ($3)", [[1, 1, 1], [2, 2, 2], Nx.tensor([1, 1, 2], type: :f32)])
 
     result = Postgrex.query!(pid, "SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [[1, 1, 1]])
 

@@ -7,11 +7,24 @@ defmodule Pgvector.Extensions.Vector do
 
   def format(_), do: :binary
 
-  def encode(_) do
-    quote do
-      vec when is_list(vec) ->
-        data = unquote(__MODULE__).encode_vector(vec)
-        [<<IO.iodata_length(data)::int32()>> | data]
+  if Code.ensure_loaded?(Nx) do
+    def encode(_) do
+      quote do
+        vec when is_list(vec) ->
+          data = unquote(__MODULE__).encode_vector(vec)
+          [<<IO.iodata_length(data)::int32()>> | data]
+        vec when is_struct(vec, Nx.Tensor) ->
+          data = unquote(__MODULE__).encode_vector(vec |> Nx.to_list())
+          [<<IO.iodata_length(data)::int32()>> | data]
+      end
+    end
+  else
+    def encode(_) do
+      quote do
+        vec when is_list(vec) ->
+          data = unquote(__MODULE__).encode_vector(vec)
+          [<<IO.iodata_length(data)::int32()>> | data]
+      end
     end
   end
 

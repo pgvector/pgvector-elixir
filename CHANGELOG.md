@@ -1,6 +1,6 @@
 ## 0.1.4 (unreleased)
 
-- Added conversion from Nx tensors for Ecto
+- Added conversion from Nx tensors
 
 ## 0.1.3 (2023-01-25)
 
