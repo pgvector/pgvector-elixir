@@ -7,24 +7,11 @@ defmodule Pgvector.Extensions.Vector do
 
   def format(_), do: :binary
 
-  if Code.ensure_loaded?(Nx) do
-    def encode(_) do
-      quote do
-        vec when is_list(vec) ->
-          data = unquote(__MODULE__).encode_vector(vec)
-          [<<IO.iodata_length(data)::int32()>> | data]
-        vec when is_struct(vec, Nx.Tensor) ->
-          data = unquote(__MODULE__).encode_vector(vec |> Nx.to_list())
-          [<<IO.iodata_length(data)::int32()>> | data]
-      end
-    end
-  else
-    def encode(_) do
-      quote do
-        vec when is_list(vec) ->
-          data = unquote(__MODULE__).encode_vector(vec)
-          [<<IO.iodata_length(data)::int32()>> | data]
-      end
+  def encode(_) do
+    quote do
+      vec ->
+        data = unquote(__MODULE__).encode_vector(vec)
+        [<<IO.iodata_length(data)::int32()>> | data]
     end
   end
 
@@ -35,10 +22,17 @@ defmodule Pgvector.Extensions.Vector do
     end
   end
 
-  def encode_vector(vec) do
+  def encode_vector(vec) when is_list(vec) do
     dim = length(vec)
     bin = Enum.map(vec, fn v -> <<v::float32>> end)
     [<<dim::uint16>>, <<0::uint16>> | bin]
+  end
+
+  if Code.ensure_loaded?(Nx) do
+    # TODO encode directly
+    def encode_vector(vec) when is_struct(vec, Nx.Tensor) do
+      encode_vector(vec |> Nx.to_list())
+    end
   end
 
   def decode_vector(<<dim::uint16, 0::uint16, bin::binary-size(dim)-unit(32)>>) do
