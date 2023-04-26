@@ -15,7 +15,7 @@ defmodule PostgrexTest do
   end
 
   setup context do
-    Postgrex.query!(context[:pid], "TRUNCATE items", [])
+    Postgrex.query!(context[:pid], "TRUNCATE items RESTART IDENTITY", [])
     context
   end
 
