@@ -27,7 +27,13 @@ defmodule PostgrexTest do
     Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", [])
   end
 
-  test "rank", %{pid: pid} = _context do
+  test "tensor", %{pid: pid} = _context do
+    embedding = Nx.tensor([1.0, 2.0, 3.0])
+    result = Postgrex.query!(pid, "SELECT $1::vector", [embedding])
+    assert result.rows == [[Nx.to_list(embedding)]]
+  end
+
+  test "tensor rank", %{pid: pid} = _context do
     assert_raise ArgumentError, "expected rank to be 1", fn ->
       Postgrex.query!(pid, "SELECT $1::vector", [Nx.tensor([[1, 2, 3]])])
     end
