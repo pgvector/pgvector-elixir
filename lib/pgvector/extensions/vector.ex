@@ -10,40 +10,15 @@ defmodule Pgvector.Extensions.Vector do
   def encode(_) do
     quote do
       vec ->
-        data = unquote(__MODULE__).encode_vector(vec)
+        data = vec |> Pgvector.vector() |> Pgvector.to_binary()
         [<<IO.iodata_length(data)::int32()>> | data]
     end
   end
 
   def decode(_) do
     quote do
-      <<_len::int32(), dim::uint16, 0::uint16, bin::binary-size(dim)-unit(32)>> ->
-        for <<v::float32 <- bin>>, do: v
-    end
-  end
-
-  def encode_vector(list) when is_list(list) do
-    dim = list |> length()
-    bin = for v <- list, do: <<v::float32>>
-    [<<dim::uint16, 0::uint16>> | bin]
-  end
-
-  if Code.ensure_loaded?(Nx) do
-    def encode_vector(tensor) when is_struct(tensor, Nx.Tensor) do
-      if Nx.rank(tensor) != 1 do
-        raise ArgumentError, "expected rank to be 1"
-      end
-      dim = tensor |> Nx.size()
-      bin = tensor |> Nx.as_type(:f32) |> Nx.to_binary() |> f32_to_big()
-      [<<dim::uint16, 0::uint16>> | bin]
-    end
-
-    defp f32_to_big(bin) do
-      if System.endianness() == :big do
-        bin
-      else
-        for <<n::float-32-little <- bin>>, do: <<n::float-32-big>>
-      end
+      <<len::int32(), data::binary-size(len)>> ->
+        data |> Pgvector.from_binary()
     end
   end
 end
