@@ -23,7 +23,7 @@ defmodule Pgvector.Extensions.Vector do
   end
 
   def encode_vector(vec) when is_list(vec) do
-    dim = length(vec)
+    dim = vec |> length()
     bin = for v <- vec, do: <<v::float32>>
     [<<dim::uint16, 0::uint16>> | bin]
   end
