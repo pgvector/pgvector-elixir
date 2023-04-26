@@ -6,9 +6,12 @@ Postgrex.Types.define(PostgrexApp.PostgrexTypes, [Pgvector.Extensions.Vector], [
 defmodule PostgrexTest do
   use ExUnit.Case
 
-  test "works" do
+  setup_all do
     {:ok, pid} = Postgrex.start_link(database: "pgvector_elixir_test", types: PostgrexApp.PostgrexTypes)
+    {:ok, pid: pid}
+  end
 
+  test "works", %{pid: pid} = _context do
     Postgrex.query!(pid, "CREATE EXTENSION IF NOT EXISTS vector", [])
     Postgrex.query!(pid, "DROP TABLE IF EXISTS items", [])
     Postgrex.query!(pid, "CREATE TABLE items (id bigserial primary key, embedding vector(3))", [])
@@ -24,9 +27,7 @@ defmodule PostgrexTest do
     Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", [])
   end
 
-  test "rank" do
-    {:ok, pid} = Postgrex.start_link(database: "pgvector_elixir_test", types: PostgrexApp.PostgrexTypes)
-
+  test "rank", %{pid: pid} = _context do
     assert_raise ArgumentError, "expected rank to be 1", fn ->
       Postgrex.query!(pid, "SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [Nx.tensor([[1, 2, 3]])])
     end
