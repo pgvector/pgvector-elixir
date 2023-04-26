@@ -23,4 +23,12 @@ defmodule PostgrexTest do
 
     Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", [])
   end
+
+  test "rank" do
+    {:ok, pid} = Postgrex.start_link(database: "pgvector_elixir_test", types: PostgrexApp.PostgrexTypes)
+
+    assert_raise ArgumentError, "expected rank to be 1", fn ->
+      Postgrex.query!(pid, "SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [Nx.tensor([[1, 2, 3]])])
+    end
+  end
 end
