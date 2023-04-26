@@ -17,8 +17,8 @@ defmodule Pgvector.Extensions.Vector do
 
   def decode(_) do
     quote do
-      <<len::int32(), data::binary-size(len)>> ->
-        unquote(__MODULE__).decode_vector(data)
+      <<_len::int32(), dim::uint16, 0::uint16, bin::binary-size(dim)-unit(32)>> ->
+        for <<v::float32 <- bin>>, do: v
     end
   end
 
@@ -45,9 +45,5 @@ defmodule Pgvector.Extensions.Vector do
         for <<n::float-32-little <- bin>>, do: <<n::float-32-big>>
       end
     end
-  end
-
-  def decode_vector(<<dim::uint16, 0::uint16, bin::binary-size(dim)-unit(32)>>) do
-    for <<v::float32 <- bin>>, do: v
   end
 end
