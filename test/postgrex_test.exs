@@ -29,7 +29,7 @@ defmodule PostgrexTest do
 
   test "rank", %{pid: pid} = _context do
     assert_raise ArgumentError, "expected rank to be 1", fn ->
-      Postgrex.query!(pid, "SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [Nx.tensor([[1, 2, 3]])])
+      Postgrex.query!(pid, "SELECT $1::vector", [Nx.tensor([[1, 2, 3]])])
     end
   end
 end
