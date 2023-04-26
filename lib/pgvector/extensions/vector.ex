@@ -24,7 +24,7 @@ defmodule Pgvector.Extensions.Vector do
 
   def encode_vector(list) when is_list(list) do
     dim = list |> length()
-    bin = for v <- list, do: <<v::float32>>
+    bin = for v <- list, into: "", do: <<v::float32>>
     [<<dim::uint16, 0::uint16>> | bin]
   end
 
@@ -34,15 +34,15 @@ defmodule Pgvector.Extensions.Vector do
         raise ArgumentError, "expected rank to be 1"
       end
       dim = tensor |> Nx.size()
-      bin = tensor |> Nx.as_type(:f32) |> Nx.to_binary() |> f32_to_big()
+      bin = tensor |> Nx.as_type(:f32) |> Nx.to_binary() |> f32_native_to_big()
       [<<dim::uint16, 0::uint16>> | bin]
     end
 
-    defp f32_to_big(bin) do
+    defp f32_native_to_big(bin) do
       if System.endianness() == :big do
         bin
       else
-        for <<n::float-32-little <- bin>>, do: <<n::float-32-big>>
+        for <<n::float-32-little <- bin>>, into: "", do: <<n::float-32-big>>
       end
     end
   end
