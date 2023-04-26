@@ -22,19 +22,19 @@ defmodule Pgvector.Extensions.Vector do
     end
   end
 
-  def encode_vector(vec) when is_list(vec) do
-    dim = vec |> length()
-    bin = for v <- vec, do: <<v::float32>>
+  def encode_vector(list) when is_list(list) do
+    dim = list |> length()
+    bin = for v <- list, do: <<v::float32>>
     [<<dim::uint16, 0::uint16>> | bin]
   end
 
   if Code.ensure_loaded?(Nx) do
-    def encode_vector(t) when is_struct(t, Nx.Tensor) do
-      if Nx.rank(t) != 1 do
+    def encode_vector(tensor) when is_struct(tensor, Nx.Tensor) do
+      if Nx.rank(tensor) != 1 do
         raise ArgumentError, "expected rank to be 1"
       end
-      dim = t |> Nx.size()
-      bin = t |> Nx.as_type(:f32) |> Nx.to_binary() |> f32_to_big()
+      dim = tensor |> Nx.size()
+      bin = tensor |> Nx.as_type(:f32) |> Nx.to_binary() |> f32_to_big()
       [<<dim::uint16, 0::uint16>> | bin]
     end
 
