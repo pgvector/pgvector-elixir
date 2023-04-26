@@ -30,8 +30,11 @@ defmodule Pgvector.Extensions.Vector do
 
   if Code.ensure_loaded?(Nx) do
     # TODO encode directly
-    def encode_vector(vec) when is_struct(vec, Nx.Tensor) do
-      encode_vector(vec |> Nx.to_list())
+    def encode_vector(t) when is_struct(t, Nx.Tensor) do
+      if Nx.rank(t) != 1 do
+        raise ArgumentError, "expected rank to be 1"
+      end
+      encode_vector(t |> Nx.to_list())
     end
   end
 
