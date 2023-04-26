@@ -24,8 +24,8 @@ defmodule Pgvector.Extensions.Vector do
 
   def encode_vector(vec) when is_list(vec) do
     dim = length(vec)
-    bin = Enum.map(vec, fn v -> <<v::float32>> end)
-    [<<dim::uint16>>, <<0::uint16>> | bin]
+    bin = for v <- vec, do: <<v::float32>>
+    [<<dim::uint16, 0::uint16>> | bin]
   end
 
   if Code.ensure_loaded?(Nx) do
