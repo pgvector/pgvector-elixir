@@ -8,14 +8,18 @@ defmodule PostgrexTest do
 
   setup_all do
     {:ok, pid} = Postgrex.start_link(database: "pgvector_elixir_test", types: PostgrexApp.PostgrexTypes)
-    {:ok, pid: pid}
-  end
-
-  test "works", %{pid: pid} = _context do
     Postgrex.query!(pid, "CREATE EXTENSION IF NOT EXISTS vector", [])
     Postgrex.query!(pid, "DROP TABLE IF EXISTS items", [])
     Postgrex.query!(pid, "CREATE TABLE items (id bigserial primary key, embedding vector(3))", [])
+    {:ok, pid: pid}
+  end
 
+  setup context do
+    Postgrex.query!(context[:pid], "TRUNCATE items", [])
+    context
+  end
+
+  test "works", %{pid: pid} = _context do
     Postgrex.query!(pid, "INSERT INTO items (embedding) VALUES ($1), ($2), ($3)", [[1, 1, 1], [2, 2, 2], Nx.tensor([1, 1, 2], type: :f32)])
 
     result = Postgrex.query!(pid, "SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [[1, 1, 1]])
