@@ -29,12 +29,21 @@ defmodule Pgvector.Extensions.Vector do
   end
 
   if Code.ensure_loaded?(Nx) do
-    # TODO encode directly
     def encode_vector(t) when is_struct(t, Nx.Tensor) do
       if Nx.rank(t) != 1 do
         raise ArgumentError, "expected rank to be 1"
       end
-      encode_vector(t |> Nx.to_list())
+      dim = t |> Nx.size()
+      bin = t |> Nx.as_type(:f32) |> Nx.to_binary() |> f32_to_big()
+      [<<dim::uint16, 0::uint16>> | bin]
+    end
+
+    defp f32_to_big(bin) do
+      if System.endianness() == :big do
+        bin
+      else
+        for <<n::float-32-little <- bin>>, do: <<n::float-32-big>>
+      end
     end
   end
 
