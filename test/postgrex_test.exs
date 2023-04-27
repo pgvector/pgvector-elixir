@@ -26,7 +26,7 @@ defmodule PostgrexTest do
 
     assert ["id", "embedding"] == result.columns
     assert Enum.map(result.rows, fn v -> Enum.at(v, 0) end) == [1, 3, 2]
-    assert Enum.map(result.rows, fn v -> Enum.at(v, 1) end) == [[1.0, 1.0, 1.0], [1.0, 1.0, 2.0], [2.0, 2.0, 2.0]]
+    assert Enum.map(result.rows, fn v -> Enum.at(v, 1) |> Pgvector.to_list() end) == [[1.0, 1.0, 1.0], [1.0, 1.0, 2.0], [2.0, 2.0, 2.0]]
 
     Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", [])
   end
@@ -34,7 +34,7 @@ defmodule PostgrexTest do
   test "tensor", %{pid: pid} = _context do
     embedding = Nx.tensor([1.0, 2.0, 3.0])
     result = Postgrex.query!(pid, "SELECT $1::vector", [embedding])
-    assert result.rows == [[Nx.to_list(embedding)]]
+    assert Enum.map(result.rows, fn v -> Enum.at(v, 0) |> Pgvector.to_tensor() end) == [embedding]
   end
 
   test "tensor rank", %{pid: pid} = _context do
