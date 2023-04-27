@@ -8,19 +8,17 @@ defmodule Pgvector do
   def new(list) when is_list(list) do
     dim = list |> length()
     bin = for v <- list, into: "", do: <<v::float-32>>
-    data = <<dim::unsigned-16, 0::unsigned-16, bin::binary>>
-    new(data)
+    new(<<dim::unsigned-16, 0::unsigned-16, bin::binary>>)
   end
 
   if Code.ensure_loaded?(Nx) do
-    def new(t) when is_struct(t, Nx.Tensor) do
-      if Nx.rank(t) != 1 do
+    def new(tensor) when is_struct(tensor, Nx.Tensor) do
+      if Nx.rank(tensor) != 1 do
         raise ArgumentError, "expected rank to be 1"
       end
-      dim = t |> Nx.size()
-      bin = t |> Nx.as_type(:f32) |> Nx.to_binary() |> f32_native_to_big()
-      data = <<dim::unsigned-16, 0::unsigned-16, bin::binary>>
-      new(data)
+      dim = tensor |> Nx.size()
+      bin = tensor |> Nx.as_type(:f32) |> Nx.to_binary() |> f32_native_to_big()
+      new(<<dim::unsigned-16, 0::unsigned-16, bin::binary>>)
     end
 
     defp f32_native_to_big(binary) do
