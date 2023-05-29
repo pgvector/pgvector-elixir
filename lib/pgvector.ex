@@ -1,6 +1,13 @@
 defmodule Pgvector do
+  @moduledoc """
+  todo
+  """
+
   defstruct [:data]
 
+  @doc """
+  todo
+  """
   def new(binary) when is_binary(binary) do
     %Pgvector{data: binary}
   end
@@ -16,6 +23,7 @@ defmodule Pgvector do
       if Nx.rank(tensor) != 1 do
         raise ArgumentError, "expected rank to be 1"
       end
+
       dim = tensor |> Nx.size()
       bin = tensor |> Nx.as_type(:f32) |> Nx.to_binary() |> f32_native_to_big()
       new(<<dim::unsigned-16, 0::unsigned-16, bin::binary>>)
@@ -51,6 +59,24 @@ defmodule Pgvector do
       else
         for <<n::float-32-big <- binary>>, into: "", do: <<n::float-32-little>>
       end
+    end
+  end
+
+  if Code.ensure_loaded?(Ecto) do
+    use Ecto.Type
+
+    def type, do: :vector
+
+    def cast(value) do
+      {:ok, value |> Pgvector.new()}
+    end
+
+    def load(data) do
+      {:ok, data}
+    end
+
+    def dump(value) do
+      {:ok, value}
     end
   end
 end

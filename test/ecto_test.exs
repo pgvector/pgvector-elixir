@@ -1,4 +1,8 @@
-Postgrex.Types.define(EctoApp.PostgrexTypes, [Pgvector.Extensions.Vector] ++ Ecto.Adapters.Postgres.extensions(), [])
+Postgrex.Types.define(
+  EctoApp.PostgrexTypes,
+  [Pgvector.Extensions.Vector] ++ Ecto.Adapters.Postgres.extensions(),
+  []
+)
 
 defmodule Repo do
   use Ecto.Repo,
@@ -10,7 +14,7 @@ defmodule Item do
   use Ecto.Schema
 
   schema "items" do
-    field :embedding, Pgvector.Ecto.Vector
+    field(:embedding, Pgvector)
   end
 end
 
@@ -25,23 +29,36 @@ defmodule EctoTest do
 
     Ecto.Adapters.SQL.query!(Repo, "CREATE EXTENSION IF NOT EXISTS vector")
     Ecto.Adapters.SQL.query!(Repo, "DROP TABLE IF EXISTS items")
-    Ecto.Adapters.SQL.query!(Repo, "CREATE TABLE items (id bigserial primary key, embedding vector(3))")
 
-    Repo.insert(%Item{embedding: [1, 1, 1]})
-    Repo.insert(%Item{embedding: [2, 2, 3]})
-    Repo.insert(%Item{embedding: Nx.tensor([1, 1, 2], type: :f32)})
+    Ecto.Adapters.SQL.query!(
+      Repo,
+      "CREATE TABLE items (id bigserial primary key, embedding vector(3))"
+    )
 
-    items = Repo.all(from i in Item, order_by: l2_distance(i.embedding, [1, 1, 1]), limit: 5)
+    Repo.insert(%Item{embedding: Pgvector.new([1, 1, 1])})
+    Repo.insert(%Item{embedding: Pgvector.new([2, 2, 3])})
+    Repo.insert(%Item{embedding: Nx.tensor([1, 1, 2], type: :f32) |> Pgvector.new()})
+
+    items = Repo.all(from(i in Item, order_by: l2_distance(i.embedding, [1, 1, 1]), limit: 5))
     assert Enum.map(items, fn v -> v.id end) == [1, 3, 2]
-    assert Enum.map(items, fn v -> v.embedding |> Pgvector.to_list() end) == [[1.0, 1.0, 1.0], [1.0, 1.0, 2.0], [2.0, 2.0, 3.0]]
 
-    items = Repo.all(from i in Item, order_by: max_inner_product(i.embedding, [1, 1, 1]), limit: 5)
+    assert Enum.map(items, fn v -> v.embedding |> Pgvector.to_list() end) == [
+             [1.0, 1.0, 1.0],
+             [1.0, 1.0, 2.0],
+             [2.0, 2.0, 3.0]
+           ]
+
+    items =
+      Repo.all(from(i in Item, order_by: max_inner_product(i.embedding, [1, 1, 1]), limit: 5))
+
     assert Enum.map(items, fn v -> v.id end) == [2, 3, 1]
 
-    items = Repo.all(from i in Item, order_by: cosine_distance(i.embedding, [1, 1, 1]), limit: 5)
+    items = Repo.all(from(i in Item, order_by: cosine_distance(i.embedding, [1, 1, 1]), limit: 5))
     assert Enum.map(items, fn v -> v.id end) == [1, 2, 3]
 
-    items = Repo.all(from i in Item, order_by: (1 - cosine_distance(i.embedding, [1, 1, 1])), limit: 5)
+    items =
+      Repo.all(from(i in Item, order_by: 1 - cosine_distance(i.embedding, [1, 1, 1]), limit: 5))
+
     assert Enum.map(items, fn v -> v.id end) == [3, 2, 1]
   end
 end

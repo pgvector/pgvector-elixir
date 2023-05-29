@@ -10,8 +10,15 @@ defmodule Pgvector.Extensions.Vector do
   def encode(_) do
     quote do
       vec ->
-        data = vec |> Pgvector.new() |> Pgvector.to_binary()
+        data = vec |> Pgvector.to_binary()
         [<<IO.iodata_length(data)::int32()>> | data]
+    end
+  end
+
+  def decode(:copy) do
+    quote do
+      <<len::int32(), bin::binary-size(len)>> ->
+        bin |> :binary.copy() |> Pgvector.new()
     end
   end
 

@@ -73,7 +73,7 @@ Update the model
 
 ```elixir
 schema "items" do
-  field :embedding, Pgvector.Ecto.Vector
+  field :embedding, Pgvector
 end
 ```
 
@@ -82,7 +82,7 @@ Insert a vector
 ```elixir
 alias MyApp.{Repo, Item}
 
-Repo.insert(%Item{embedding: [1, 2, 3]})
+Repo.insert(%Item{embedding: Pgvector.new([1, 2, 3])})
 ```
 
 Get the nearest neighbors
@@ -127,13 +127,13 @@ Postgrex.query!(pid, "CREATE TABLE items (embedding vector(3))", [])
 Insert a vector
 
 ```elixir
-Postgrex.query!(pid, "INSERT INTO items (embedding) VALUES ($1)", [[1, 2, 3]])
+Postgrex.query!(pid, "INSERT INTO items (embedding) VALUES ($1)", [Pgvector.new([1, 2, 3])])
 ```
 
 Get the nearest neighbors
 
 ```elixir
-Postgrex.query!(pid, "SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [[1, 2, 3]])
+Postgrex.query!(pid, "SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [Pgvector.new([1, 2, 3])])
 ```
 
 Add an approximate index

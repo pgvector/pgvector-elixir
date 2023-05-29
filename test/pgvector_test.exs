@@ -3,12 +3,12 @@ defmodule PgvectorTest do
 
   test "list" do
     list = [1.0, 2.0, 3.0]
-    assert list == (list |> Pgvector.new() |> Pgvector.to_list())
+    assert list == list |> Pgvector.new() |> Pgvector.to_list()
   end
 
   test "tensor" do
     tensor = Nx.tensor([1.0, 2.0, 3.0])
-    assert tensor == (tensor |> Pgvector.new() |> Pgvector.to_tensor())
+    assert tensor == tensor |> Pgvector.new() |> Pgvector.to_tensor()
   end
 
   test "inspect" do
