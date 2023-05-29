@@ -17,15 +17,15 @@ defmodule Pgvector.Extensions.Vector do
 
   def decode(_) do
     quote do
-      <<_len::int32(), dim::uint16, 0::uint16, bin::binary-size(dim)-unit(32)>> ->
-        for <<v::float32 <- bin>>, do: v
+      <<_len::int32(), dim::uint16(), 0::uint16(), bin::binary-size(dim)-unit(32)>> ->
+        for <<v::float32() <- bin>>, do: v
     end
   end
 
   def encode_vector(list) when is_list(list) do
     dim = list |> length()
-    bin = for v <- list, into: "", do: <<v::float32>>
-    [<<dim::uint16, 0::uint16>> | bin]
+    bin = for v <- list, into: "", do: <<v::float32()>>
+    [<<dim::uint16(), 0::uint16()>> | bin]
   end
 
   if Code.ensure_loaded?(Nx) do
@@ -33,9 +33,10 @@ defmodule Pgvector.Extensions.Vector do
       if Nx.rank(tensor) != 1 do
         raise ArgumentError, "expected rank to be 1"
       end
+
       dim = tensor |> Nx.size()
       bin = tensor |> Nx.as_type(:f32) |> Nx.to_binary() |> f32_native_to_big()
-      [<<dim::uint16, 0::uint16>> | bin]
+      [<<dim::uint16(), 0::uint16()>> | bin]
     end
 
     defp f32_native_to_big(bin) do

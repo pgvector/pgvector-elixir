@@ -7,6 +7,7 @@ if Code.ensure_loaded?(Ecto) do
     def cast(value) when is_list(value) do
       {:ok, value}
     end
+
     def cast(_), do: :error
 
     def load(data) do
@@ -16,11 +17,13 @@ if Code.ensure_loaded?(Ecto) do
     def dump(value) when is_list(value) do
       {:ok, value}
     end
+
     if Code.ensure_loaded?(Nx) do
       def dump(value) when is_struct(value, Nx.Tensor) do
         {:ok, value}
       end
     end
+
     def dump(_), do: :error
   end
 end
