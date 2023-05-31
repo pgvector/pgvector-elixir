@@ -17,11 +17,15 @@ defmodule EctoTest do
     Ecto.Adapters.SQL.query!(Repo, "DROP TABLE IF EXISTS ecto_items", [])
     Ecto.Adapters.SQL.query!(Repo, "CREATE TABLE ecto_items (id bigserial primary key, embedding vector(3))", [])
 
+    create_items()
+
+    :ok
+  end
+
+  defp create_items do
     Repo.insert(%Item{embedding: [1, 1, 1]})
     Repo.insert(%Item{embedding: [2, 2, 3]})
     Repo.insert(%Item{embedding: Nx.tensor([1, 1, 2], type: :f32)})
-
-    :ok
   end
 
   test "l2 distance" do
