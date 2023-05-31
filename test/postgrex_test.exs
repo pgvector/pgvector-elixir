@@ -19,7 +19,7 @@ defmodule PostgrexTest do
     context
   end
 
-  test "works", %{pid: pid} = _context do
+  test "l2 distance", %{pid: pid} = _context do
     Postgrex.query!(pid, "INSERT INTO postgrex_items (embedding) VALUES ($1), ($2), ($3)", [[1, 1, 1], [2, 2, 2], Nx.tensor([1, 1, 2], type: :f32)])
 
     result = Postgrex.query!(pid, "SELECT * FROM postgrex_items ORDER BY embedding <-> $1 LIMIT 5", [[1, 1, 1]])
@@ -27,8 +27,10 @@ defmodule PostgrexTest do
     assert ["id", "embedding"] == result.columns
     assert Enum.map(result.rows, fn v -> Enum.at(v, 0) end) == [1, 3, 2]
     assert Enum.map(result.rows, fn v -> Enum.at(v, 1) end) == [[1.0, 1.0, 1.0], [1.0, 1.0, 2.0], [2.0, 2.0, 2.0]]
+  end
 
-    Postgrex.query!(pid, "CREATE INDEX my_index ON postgrex_items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", [])
+  test "create index", %{pid: pid} = _context do
+    Postgrex.query!(pid, "CREATE INDEX my_index ON postgrex_items USING ivfflat (embedding vector_l2_ops) WITH (lists = 1)", [])
   end
 
   test "tensor", %{pid: pid} = _context do
