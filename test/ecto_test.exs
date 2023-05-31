@@ -43,5 +43,10 @@ defmodule EctoTest do
 
     items = Repo.all(from i in Item, order_by: (1 - cosine_distance(i.embedding, [1, 1, 1])), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [3, 2, 1]
+
+    # test cast
+    embedding = [1, 1, 1]
+    items = Repo.all(from i in Item, where: i.embedding == ^embedding)
+    assert Enum.map(items, fn v -> v.id end) == [1]
   end
 end
