@@ -20,7 +20,8 @@ defmodule PostgrexTest do
   end
 
   test "l2 distance", %{pid: pid} = _context do
-    Postgrex.query!(pid, "INSERT INTO postgrex_items (embedding) VALUES ($1), ($2), ($3)", [[1, 1, 1], [2, 2, 2], Nx.tensor([1, 1, 2], type: :f32)])
+    embeddings = [[1, 1, 1], [2, 2, 2], Nx.tensor([1, 1, 2], type: :f32)]
+    Postgrex.query!(pid, "INSERT INTO postgrex_items (embedding) VALUES ($1), ($2), ($3)", embeddings)
 
     result = Postgrex.query!(pid, "SELECT * FROM postgrex_items ORDER BY embedding <-> $1 LIMIT 5", [[1, 1, 1]])
 
