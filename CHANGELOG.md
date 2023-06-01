@@ -1,6 +1,7 @@
-## 0.1.4 (unreleased)
+## 0.2.0 (unreleased)
 
 - Added conversion from Nx tensors
+- Dropped support for Elixir < 1.11
 
 ## 0.1.3 (2023-01-25)
 
