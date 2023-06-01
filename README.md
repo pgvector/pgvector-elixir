@@ -11,7 +11,7 @@ Supports [Ecto](https://github.com/elixir-ecto/ecto) and [Postgrex](https://gith
 Add this line to your application’s `mix.exs` under `deps`:
 
 ```elixir
-{:pgvector, "~> 0.1.0"}
+{:pgvector, "~> 0.2.0"}
 ```
 
 And follow the instructions for your database library:
@@ -96,6 +96,13 @@ Repo.all(from i in Item, order_by: l2_distance(i.embedding, [1, 2, 3]), limit: 5
 
 Also supports `max_inner_product` and `cosine_distance`
 
+Convert a vector to a list or Nx tensor
+
+```elixir
+item.embedding |> Pgvector.to_list()
+item.embedding |> Pgvector.to_tensor()
+```
+
 Add an approximate index in a migration
 
 ```elixir
@@ -136,6 +143,13 @@ Get the nearest neighbors
 Postgrex.query!(pid, "SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", [[1, 2, 3]])
 ```
 
+Convert a vector to a list or Nx tensor
+
+```elixir
+vector |> Pgvector.to_list()
+vector |> Pgvector.to_tensor()
+```
+
 Add an approximate index
 
 ```elixir
@@ -146,7 +160,7 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 
 ## Upgrading
 
-### 0.2.0 [unreleased]
+### 0.2.0
 
 Vectors are now returned as `Pgvector` structs instead of lists. Get a list with:
 

@@ -1,4 +1,4 @@
-## 0.2.0 (unreleased)
+## 0.2.0 (2023-05-31)
 
 - Vectors are now returned as `Pgvector` structs instead of lists
 - Added support for Nx tensors
