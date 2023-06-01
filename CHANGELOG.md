@@ -1,6 +1,7 @@
 ## 0.2.0 (unreleased)
 
-- Added conversion from Nx tensors
+- Vectors are now returned as a `Pgvector` struct instead of a list
+- Added support for Nx tensors
 - Dropped support for Elixir < 1.11
 
 ## 0.1.3 (2023-01-25)

@@ -21,7 +21,7 @@ defmodule EctoTest do
   end
 
   defp create_items do
-    Repo.insert(%Item{embedding: [1, 1, 1]})
+    Repo.insert(%Item{embedding: Pgvector.new([1, 1, 1])})
     Repo.insert(%Item{embedding: [2, 2, 3]})
     Repo.insert(%Item{embedding: Nx.tensor([1, 1, 2], type: :f32)})
   end
@@ -29,7 +29,7 @@ defmodule EctoTest do
   test "l2 distance" do
     items = Repo.all(from i in Item, order_by: l2_distance(i.embedding, [1, 1, 1]), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [1, 3, 2]
-    assert Enum.map(items, fn v -> v.embedding end) == [[1.0, 1.0, 1.0], [1.0, 1.0, 2.0], [2.0, 2.0, 3.0]]
+    assert Enum.map(items, fn v -> v.embedding |> Pgvector.to_list() end) == [[1.0, 1.0, 1.0], [1.0, 1.0, 2.0], [2.0, 2.0, 3.0]]
   end
 
   test "max inner product" do

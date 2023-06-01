@@ -20,14 +20,14 @@ defmodule PostgrexTest do
   end
 
   test "l2 distance", %{pid: pid} = _context do
-    embeddings = [[1, 1, 1], [2, 2, 2], Nx.tensor([1, 1, 2], type: :f32)]
+    embeddings = [Pgvector.new([1, 1, 1]), [2, 2, 2], Nx.tensor([1, 1, 2], type: :f32)]
     Postgrex.query!(pid, "INSERT INTO postgrex_items (embedding) VALUES ($1), ($2), ($3)", embeddings)
 
     result = Postgrex.query!(pid, "SELECT * FROM postgrex_items ORDER BY embedding <-> $1 LIMIT 5", [[1, 1, 1]])
 
     assert ["id", "embedding"] == result.columns
     assert Enum.map(result.rows, fn v -> Enum.at(v, 0) end) == [1, 3, 2]
-    assert Enum.map(result.rows, fn v -> Enum.at(v, 1) end) == [[1.0, 1.0, 1.0], [1.0, 1.0, 2.0], [2.0, 2.0, 2.0]]
+    assert Enum.map(result.rows, fn v -> Enum.at(v, 1) |> Pgvector.to_list() end) == [[1.0, 1.0, 1.0], [1.0, 1.0, 2.0], [2.0, 2.0, 2.0]]
   end
 
   test "create index", %{pid: pid} = _context do
@@ -37,7 +37,7 @@ defmodule PostgrexTest do
   test "tensor", %{pid: pid} = _context do
     embedding = Nx.tensor([1.0, 2.0, 3.0])
     result = Postgrex.query!(pid, "SELECT $1::vector", [embedding])
-    assert result.rows == [[Nx.to_list(embedding)]]
+    assert result.rows == [[embedding |> Pgvector.new()]]
   end
 
   test "tensor rank", %{pid: pid} = _context do

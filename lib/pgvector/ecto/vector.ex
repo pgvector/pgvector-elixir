@@ -4,26 +4,16 @@ if Code.ensure_loaded?(Ecto) do
 
     def type, do: :vector
 
-    def cast(value) when is_list(value) do
-      {:ok, value}
+    def cast(value) do
+      {:ok, value |> Pgvector.new()}
     end
-
-    def cast(_), do: :error
 
     def load(data) do
       {:ok, data}
     end
 
-    def dump(value) when is_list(value) do
+    def dump(value) do
       {:ok, value}
     end
-
-    if Code.ensure_loaded?(Nx) do
-      def dump(value) when is_struct(value, Nx.Tensor) do
-        {:ok, value}
-      end
-    end
-
-    def dump(_), do: :error
   end
 end
