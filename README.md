@@ -144,6 +144,22 @@ Postgrex.query!(pid, "CREATE INDEX my_index ON items USING ivfflat (embedding ve
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
+## Upgrading
+
+### 0.2.0 [unreleased]
+
+Vectors are now returned as `Pgvector` structs instead of lists. Get a list with:
+
+```elixir
+vector |> Pgvector.to_list()
+```
+
+or an Nx tensor with:
+
+```elixir
+vector |> Pgvector.to_tensor()
+```
+
 ## History
 
 View the [changelog](https://github.com/pgvector/pgvector-elixir/blob/master/CHANGELOG.md)
