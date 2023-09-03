@@ -6,8 +6,12 @@ defmodule Pgvector do
   defstruct [:data]
 
   @doc """
-  Creates a new vector from a list or tensor
+  Creates a new vector from a Pgvector or list or tensor
   """
+  def new(%Pgvector{} = pgvector) do
+    pgvector
+  end
+
   def new(list) when is_list(list) do
     dim = list |> length()
     bin = for v <- list, into: "", do: <<v::float-32>>
