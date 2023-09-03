@@ -1,6 +1,11 @@
 defmodule PgvectorTest do
   use ExUnit.Case
 
+  test "pgvector" do
+    pgvector = Pgvector.new([1, 2, 3])
+    assert pgvector == pgvector |> Pgvector.new()
+  end
+
   test "list" do
     list = [1.0, 2.0, 3.0]
     assert list == list |> Pgvector.new() |> Pgvector.to_list()
