@@ -6,16 +6,16 @@ defmodule Pgvector do
   defstruct [:data]
 
   @doc """
-  Creates a new vector from a Pgvector or list or tensor
+  Creates a new vector from a list, tensor, or vector
   """
-  def new(%Pgvector{} = pgvector) do
-    pgvector
-  end
-
   def new(list) when is_list(list) do
     dim = list |> length()
     bin = for v <- list, into: "", do: <<v::float-32>>
     from_binary(<<dim::unsigned-16, 0::unsigned-16, bin::binary>>)
+  end
+
+  def new(%Pgvector{} = vector) do
+    vector
   end
 
   if Code.ensure_loaded?(Nx) do
