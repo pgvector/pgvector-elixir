@@ -9,10 +9,6 @@ defmodule Pgvector.Extensions.Vector do
 
   def encode(_) do
     quote do
-      vec when is_struct(vec, Pgvector) ->
-        data = vec |> Pgvector.to_binary()
-        [<<IO.iodata_length(data)::int32()>> | data]
-
       vec ->
         data = vec |> Pgvector.new() |> Pgvector.to_binary()
         [<<IO.iodata_length(data)::int32()>> | data]
