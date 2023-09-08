@@ -60,10 +60,10 @@ defmodule Pgvector do
     for <<v::float-32 <- bin>>, do: v
   end
 
-  @doc """
-  Converts the vector to a tensor
-  """
   if Code.ensure_loaded?(Nx) do
+    @doc """
+    Converts the vector to a tensor
+    """
     def to_tensor(vector) when is_struct(vector, Pgvector) do
       <<dim::unsigned-16, 0::unsigned-16, bin::binary-size(dim)-unit(32)>> = vector.data
       bin |> f32_big_to_native() |> Nx.from_binary(:f32)
