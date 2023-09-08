@@ -19,6 +19,10 @@ And follow the instructions for your database library:
 - [Ecto](#ecto)
 - [Postgrex](#postgrex)
 
+Or check out an example:
+
+- [Embeddings](examples/openai/example.exs) with OpenAI
+
 ## Ecto
 
 Create `lib/postgrex_types.ex` with:
