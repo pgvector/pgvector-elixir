@@ -1,13 +1,13 @@
 Postgrex.Types.define(Example.PostgrexTypes, [Pgvector.Extensions.Vector], [])
 
-{:ok, pid} = Postgrex.start_link(database: "pgvector_elixir_test", types: Example.PostgrexTypes)
+{:ok, pid} = Postgrex.start_link(database: "pgvector_example", types: Example.PostgrexTypes)
 
 Postgrex.query!(pid, "CREATE EXTENSION IF NOT EXISTS vector", [])
-Postgrex.query!(pid, "DROP TABLE IF EXISTS articles", [])
+Postgrex.query!(pid, "DROP TABLE IF EXISTS documents", [])
 
 Postgrex.query!(
   pid,
-  "CREATE TABLE articles (id bigserial PRIMARY KEY, content text, embedding vector(1536))",
+  "CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding vector(1536))",
   []
 )
 
@@ -41,19 +41,19 @@ input = [
 embeddings = Example.fetch_embeddings(input)
 
 for {content, embedding} <- Enum.zip(input, embeddings) do
-  Postgrex.query!(pid, "INSERT INTO articles (content, embedding) VALUES ($1, $2)", [
+  Postgrex.query!(pid, "INSERT INTO documents (content, embedding) VALUES ($1, $2)", [
     content,
     embedding
   ])
 end
 
-article_id = 1
+document_id = 1
 
 result =
   Postgrex.query!(
     pid,
-    "SELECT id, content FROM articles WHERE id != $1 ORDER BY embedding <=> (SELECT embedding FROM articles WHERE id = $1) LIMIT 5",
-    [article_id]
+    "SELECT id, content FROM documents WHERE id != $1 ORDER BY embedding <=> (SELECT embedding FROM documents WHERE id = $1) LIMIT 5",
+    [document_id]
   )
 
 for [id, content] <- result.rows do
