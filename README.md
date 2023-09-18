@@ -131,6 +131,12 @@ And pass it to `start_link`
 {:ok, pid} = Postgrex.start_link(types: MyApp.PostgrexTypes)
 ```
 
+Enable the extension
+
+```elixir
+Postgrex.query!(pid, "CREATE EXTENSION IF NOT EXISTS vector", [])
+```
+
 Create a table
 
 ```elixir
