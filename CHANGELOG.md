@@ -1,4 +1,4 @@
-## 0.2.1 (unreleased)
+## 0.2.1 (2023-09-25)
 
 - Added support for `Pgvector` to `Pgvector.new/1`
 
