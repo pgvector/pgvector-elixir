@@ -21,7 +21,7 @@ And follow the instructions for your database library:
 
 Or check out an example:
 
-- [Embeddings](examples/openai/example.exs) with OpenAI
+- [Embeddings](https://github.com/pgvector/pgvector-elixir/blob/master/examples/openai/example.exs) with OpenAI
 
 ## Ecto
 
