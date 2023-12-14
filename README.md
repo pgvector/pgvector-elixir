@@ -110,7 +110,7 @@ item.embedding |> Pgvector.to_tensor()
 Add an approximate index in a migration
 
 ```elixir
-create index("items", ["embedding vector_l2_ops"], using: :ivfflat)
+create index("items", ["embedding vector_l2_ops"], using: :ivfflat, options: "lists = 100")
 # or
 create index("items", ["embedding vector_l2_ops"], using: :hnsw)
 ```
