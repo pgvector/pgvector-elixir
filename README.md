@@ -4,7 +4,7 @@
 
 Supports [Ecto](https://github.com/elixir-ecto/ecto) and [Postgrex](https://github.com/elixir-ecto/postgrex)
 
-[![Build Status](https://github.com/pgvector/pgvector-elixir/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-elixir/actions)
+[![Build Status](https://github.com/pgvector/pgvector-elixir/actions/workflows/build.yml/badge.svg)](https://github.com/pgvector/pgvector-elixir/actions)
 
 ## Installation
 
