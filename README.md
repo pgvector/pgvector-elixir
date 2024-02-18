@@ -110,9 +110,9 @@ item.embedding |> Pgvector.to_tensor()
 Add an approximate index in a migration
 
 ```elixir
-create index("items", ["embedding vector_l2_ops"], using: :ivfflat, options: "lists = 100")
-# or
 create index("items", ["embedding vector_l2_ops"], using: :hnsw)
+# or
+create index("items", ["embedding vector_l2_ops"], using: :ivfflat, options: "lists = 100")
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
@@ -165,9 +165,9 @@ vector |> Pgvector.to_tensor()
 Add an approximate index
 
 ```elixir
-Postgrex.query!(pid, "CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", [])
-# or
 Postgrex.query!(pid, "CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)", [])
+# or
+Postgrex.query!(pid, "CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", [])
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
