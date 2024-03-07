@@ -34,6 +34,16 @@ defmodule PostgrexTest do
     Postgrex.query!(pid, "CREATE INDEX my_index ON postgrex_items USING ivfflat (embedding vector_l2_ops) WITH (lists = 1)", [])
   end
 
+  test "copy", %{pid: pid} = _context do
+    Postgrex.transaction(pid, fn(conn) ->
+      data = Pgvector.new([1, 2, 3]) |> Pgvector.to_binary()
+      # https://www.postgresql.org/docs/current/sql-copy.html
+      signature = "PGCOPY\n\xFF\r\n\0"
+      stream = Postgrex.stream(conn, "COPY postgrex_items (embedding) FROM STDIN WITH (FORMAT BINARY)", [])
+      Enum.into([<<signature::binary, 0::unsigned-32, 0::unsigned-32>>, <<1::unsigned-16, IO.iodata_length(data)::unsigned-32, data::binary>>, <<-1::unsigned-16>>], stream)
+    end)
+  end
+
   test "tensor", %{pid: pid} = _context do
     embedding = Nx.tensor([1.0, 2.0, 3.0])
     result = Postgrex.query!(pid, "SELECT $1::vector", [embedding])
