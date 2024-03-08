@@ -27,6 +27,7 @@ defmodule Example do
   end
 
   defp copy_value(value) do
+    # TODO use extension and support other types
     data = value |> Pgvector.to_binary()
     <<IO.iodata_length(data)::unsigned-32, data::binary>>
   end
