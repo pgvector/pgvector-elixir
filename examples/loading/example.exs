@@ -39,7 +39,7 @@ Postgrex.transaction(pid, fn(conn) ->
   stream = Postgrex.stream(conn, "COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)", [])
   rows = Enum.map(embeddings |> Nx.to_list(), fn v -> [v |> Pgvector.new()] end)
   stream |> Example.copy(rows)
-end)
+end, timeout: 30000)
 IO.puts("Success!")
 
 # create any indexes *after* loading initial data (skipping for this example)
