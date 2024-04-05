@@ -10,7 +10,7 @@ defmodule PostgrexTest do
     {:ok, pid} = Postgrex.start_link(database: "pgvector_elixir_test", types: PostgrexApp.PostgrexTypes)
     Postgrex.query!(pid, "CREATE EXTENSION IF NOT EXISTS vector", [])
     Postgrex.query!(pid, "DROP TABLE IF EXISTS postgrex_items", [])
-    Postgrex.query!(pid, "CREATE TABLE postgrex_items (id bigserial primary key, embedding vector(3))", [])
+    Postgrex.query!(pid, "CREATE TABLE postgrex_items (id bigserial primary key, embedding vector(3), binary_embedding bit(3))", [])
     {:ok, pid: pid}
   end
 
@@ -23,7 +23,7 @@ defmodule PostgrexTest do
     embeddings = [Pgvector.new([1, 1, 1]), [2, 2, 2], Nx.tensor([1, 1, 2], type: :f32)]
     Postgrex.query!(pid, "INSERT INTO postgrex_items (embedding) VALUES ($1), ($2), ($3)", embeddings)
 
-    result = Postgrex.query!(pid, "SELECT * FROM postgrex_items ORDER BY embedding <-> $1 LIMIT 5", [[1, 1, 1]])
+    result = Postgrex.query!(pid, "SELECT id, embedding FROM postgrex_items ORDER BY embedding <-> $1 LIMIT 5", [[1, 1, 1]])
 
     assert ["id", "embedding"] == result.columns
     assert Enum.map(result.rows, fn v -> Enum.at(v, 0) end) == [1, 3, 2]
@@ -54,5 +54,14 @@ defmodule PostgrexTest do
     assert_raise ArgumentError, "expected rank to be 1", fn ->
       Postgrex.query!(pid, "SELECT $1::vector", [Nx.tensor([[1, 2, 3]])])
     end
+  end
+
+  test "hamming distance", %{pid: pid} = _context do
+    embeddings = [<<0::1, 0::1, 0::1>>, <<1::1, 1::1, 1::1>>, <<1::1, 0::1, 1::1>>]
+    Postgrex.query!(pid, "INSERT INTO postgrex_items (binary_embedding) VALUES ($1), ($2), ($3)", embeddings)
+
+    result = Postgrex.query!(pid, "SELECT id, binary_embedding FROM postgrex_items ORDER BY bit_count(binary_embedding # $1) LIMIT 5", [<<0::1, 0::1, 0::1>>])
+    assert Enum.map(result.rows, fn v -> Enum.at(v, 0) end) == [1, 3, 2]
+    assert Enum.map(result.rows, fn v -> Enum.at(v, 1) end) == [<<0::1, 0::1, 0::1>>, <<1::1, 0::1, 1::1>>, <<1::1, 1::1, 1::1>>]
   end
 end
