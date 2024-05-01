@@ -30,5 +30,14 @@ if Code.ensure_loaded?(Ecto) do
         fragment("(? <=> ?::vector)", unquote(column), unquote(value))
       end
     end
+
+    @doc """
+    Returns the L1 distance
+    """
+    defmacro l1_distance(column, value) do
+      quote do
+        fragment("(? <+> ?::vector)", unquote(column), unquote(value))
+      end
+    end
   end
 end
