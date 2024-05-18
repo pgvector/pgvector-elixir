@@ -52,12 +52,21 @@ defmodule Pgvector do
     vector.data
   end
 
+  def to_binary(vector) when is_struct(vector, Pgvector.HalfVector) do
+    vector.data
+  end
+
   @doc """
   Converts the vector to a list
   """
   def to_list(vector) when is_struct(vector, Pgvector) do
     <<dim::unsigned-16, 0::unsigned-16, bin::binary-size(dim)-unit(32)>> = vector.data
     for <<v::float-32 <- bin>>, do: v
+  end
+
+  def to_list(vector) when is_struct(vector, Pgvector.HalfVector) do
+    <<dim::unsigned-16, 0::unsigned-16, bin::binary-size(dim)-unit(16)>> = vector.data
+    for <<v::float-16 <- bin>>, do: v
   end
 
   if Code.ensure_loaded?(Nx) do
@@ -69,11 +78,24 @@ defmodule Pgvector do
       bin |> f32_big_to_native() |> Nx.from_binary(:f32)
     end
 
+    def to_tensor(vector) when is_struct(vector, Pgvector.HalfVector) do
+      <<dim::unsigned-16, 0::unsigned-16, bin::binary-size(dim)-unit(16)>> = vector.data
+      bin |> f16_big_to_native() |> Nx.from_binary(:f16)
+    end
+
     defp f32_big_to_native(binary) do
       if System.endianness() == :big do
         binary
       else
         for <<n::float-32-big <- binary>>, into: "", do: <<n::float-32-little>>
+      end
+    end
+
+    defp f16_big_to_native(binary) do
+      if System.endianness() == :big do
+        binary
+      else
+        for <<n::float-16-big <- binary>>, into: "", do: <<n::float-16-little>>
       end
     end
   end
@@ -83,8 +105,19 @@ defmodule Pgvector do
   """
   def extensions do
     [
-      Pgvector.Extensions.Vector
+      Pgvector.Extensions.Vector,
+      Pgvector.Extensions.Halfvec
     ]
+  end
+
+  # TODO move / improve pattern
+  @doc false
+  def to_sql(vector) when is_struct(vector, Pgvector.HalfVector) do
+    vector
+  end
+
+  def to_sql(vector) do
+    vector |> Pgvector.new()
   end
 end
 
