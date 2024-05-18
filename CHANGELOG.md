@@ -1,5 +1,6 @@
 ## 0.2.2 (unreleased)
 
+- Added `Pgvector.extensions/0` function
 - Added `l1_distance` function for Ecto
 
 ## 0.2.1 (2023-09-25)

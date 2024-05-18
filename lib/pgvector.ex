@@ -77,6 +77,15 @@ defmodule Pgvector do
       end
     end
   end
+
+  @doc """
+  Extensions for Postgrex
+  """
+  def extensions do
+    [
+      Pgvector.Extensions.Vector
+    ]
+  end
 end
 
 defimpl Inspect, for: Pgvector do
