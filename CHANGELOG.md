@@ -1,8 +1,9 @@
 ## 0.2.2 (unreleased)
 
 - Added support for `halfvec` and `sparsevec` types
+- Added support for `bit` type to Ecto
 - Added `Pgvector.extensions/0` function
-- Added `l1_distance` function for Ecto
+- Added `l1_distance`, `hamming_distance`, and `jaccard_distance` functions for Ecto
 
 ## 0.2.1 (2023-09-25)
 

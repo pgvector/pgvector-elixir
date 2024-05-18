@@ -143,6 +143,12 @@ defmodule Pgvector do
   def to_sql(vector) do
     vector |> Pgvector.new()
   end
+
+  # TODO move / improve pattern
+  @doc false
+  def to_bit_sql(vector) when is_bitstring(vector) do
+    vector
+  end
 end
 
 defimpl Inspect, for: Pgvector do
