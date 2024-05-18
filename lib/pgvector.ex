@@ -56,6 +56,10 @@ defmodule Pgvector do
     vector.data
   end
 
+  def to_binary(vector) when is_struct(vector, Pgvector.SparseVector) do
+    vector.data
+  end
+
   @doc """
   Converts the vector to a list
   """
@@ -67,6 +71,16 @@ defmodule Pgvector do
   def to_list(vector) when is_struct(vector, Pgvector.HalfVector) do
     <<dim::unsigned-16, 0::unsigned-16, bin::binary-size(dim)-unit(16)>> = vector.data
     for <<v::float-16 <- bin>>, do: v
+  end
+
+  def to_list(vector) when is_struct(vector, Pgvector.SparseVector) do
+    <<dim::signed-32, nnz::signed-32, 0::signed-32, indices::binary-size(nnz)-unit(32),
+      values::binary-size(nnz)-unit(32)>> = vector.data
+
+    indices = for <<v::signed-32 <- indices>>, do: v
+    values = for <<v::float-32 <- values>>, do: v
+    list = List.duplicate(0.0, dim)
+    Enum.zip_reduce(indices, values, list, fn x, y, acc -> List.replace_at(acc, x, y) end)
   end
 
   if Code.ensure_loaded?(Nx) do
@@ -81,6 +95,11 @@ defmodule Pgvector do
     def to_tensor(vector) when is_struct(vector, Pgvector.HalfVector) do
       <<dim::unsigned-16, 0::unsigned-16, bin::binary-size(dim)-unit(16)>> = vector.data
       bin |> f16_big_to_native() |> Nx.from_binary(:f16)
+    end
+
+    def to_tensor(vector) when is_struct(vector, Pgvector.SparseVector) do
+      # TODO improve
+      vector |> to_list() |> Nx.tensor(type: :f32)
     end
 
     defp f32_big_to_native(binary) do
@@ -106,13 +125,18 @@ defmodule Pgvector do
   def extensions do
     [
       Pgvector.Extensions.Vector,
-      Pgvector.Extensions.Halfvec
+      Pgvector.Extensions.Halfvec,
+      Pgvector.Extensions.Sparsevec
     ]
   end
 
   # TODO move / improve pattern
   @doc false
   def to_sql(vector) when is_struct(vector, Pgvector.HalfVector) do
+    vector
+  end
+
+  def to_sql(vector) when is_struct(vector, Pgvector.SparseVector) do
     vector
   end
 
