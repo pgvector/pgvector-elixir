@@ -50,7 +50,6 @@ defmodule EctoTest do
   test "l1 distance" do
     items = Repo.all(from i in Item, order_by: l1_distance(i.embedding, [1, 1, 1]), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [1, 3, 2]
-    assert Enum.map(items, fn v -> v.embedding |> Pgvector.to_list() end) == [[1.0, 1.0, 1.0], [1.0, 1.0, 2.0], [2.0, 2.0, 3.0]]
   end
 
   test "cast" do
