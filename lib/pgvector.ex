@@ -129,26 +129,6 @@ defmodule Pgvector do
       Pgvector.Extensions.Sparsevec
     ]
   end
-
-  # TODO move / improve pattern
-  @doc false
-  def to_sql(vector) when is_struct(vector, Pgvector.HalfVector) do
-    vector
-  end
-
-  def to_sql(vector) when is_struct(vector, Pgvector.SparseVector) do
-    vector
-  end
-
-  def to_sql(vector) do
-    vector |> Pgvector.new()
-  end
-
-  # TODO move / improve pattern
-  @doc false
-  def to_bit_sql(vector) when is_bitstring(vector) do
-    vector
-  end
 end
 
 defimpl Inspect, for: Pgvector do
