@@ -9,7 +9,7 @@ if Code.ensure_loaded?(Ecto) do
     """
     defmacro l2_distance(column, value) do
       quote do
-        fragment("(? <-> ?)", unquote(column), ^Pgvector.Ecto.Utils.to_sql(unquote(value)))
+        fragment("(? <-> ?)", unquote(column), unquote(value))
       end
     end
 
@@ -18,7 +18,7 @@ if Code.ensure_loaded?(Ecto) do
     """
     defmacro max_inner_product(column, value) do
       quote do
-        fragment("(? <#> ?)", unquote(column), ^Pgvector.Ecto.Utils.to_sql(unquote(value)))
+        fragment("(? <#> ?)", unquote(column), unquote(value))
       end
     end
 
@@ -27,7 +27,7 @@ if Code.ensure_loaded?(Ecto) do
     """
     defmacro cosine_distance(column, value) do
       quote do
-        fragment("(? <=> ?)", unquote(column), ^Pgvector.Ecto.Utils.to_sql(unquote(value)))
+        fragment("(? <=> ?)", unquote(column), unquote(value))
       end
     end
 
@@ -36,7 +36,7 @@ if Code.ensure_loaded?(Ecto) do
     """
     defmacro l1_distance(column, value) do
       quote do
-        fragment("(? <+> ?)", unquote(column), ^Pgvector.Ecto.Utils.to_sql(unquote(value)))
+        fragment("(? <+> ?)", unquote(column), unquote(value))
       end
     end
 
