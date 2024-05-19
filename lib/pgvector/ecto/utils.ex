@@ -13,8 +13,4 @@ defmodule Pgvector.Ecto.Utils do
   def to_sql(vector) do
     vector |> Pgvector.new()
   end
-
-  def to_bit_sql(vector) when is_bitstring(vector) do
-    vector
-  end
 end

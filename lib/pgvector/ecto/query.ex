@@ -45,7 +45,7 @@ if Code.ensure_loaded?(Ecto) do
     """
     defmacro hamming_distance(column, value) do
       quote do
-        fragment("(? <~> ?)", unquote(column), ^Pgvector.Ecto.Utils.to_bit_sql(unquote(value)))
+        fragment("(? <~> ?)", unquote(column), unquote(value))
       end
     end
 
@@ -54,7 +54,7 @@ if Code.ensure_loaded?(Ecto) do
     """
     defmacro jaccard_distance(column, value) do
       quote do
-        fragment("(? <%> ?)", unquote(column), ^Pgvector.Ecto.Utils.to_bit_sql(unquote(value)))
+        fragment("(? <%> ?)", unquote(column), unquote(value))
       end
     end
   end

@@ -82,12 +82,12 @@ defmodule EctoTest do
   end
 
   test "bit hamming distance" do
-    items = Repo.all(from i in Item, order_by: hamming_distance(i.binary_embedding, <<1::1, 0::1, 1::1>>), limit: 5)
+    items = Repo.all(from i in Item, order_by: hamming_distance(i.binary_embedding, ^<<1::1, 0::1, 1::1>>), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [2, 3, 1]
   end
 
   test "bit jaccard distance" do
-    items = Repo.all(from i in Item, order_by: jaccard_distance(i.binary_embedding, <<1::1, 0::1, 1::1>>), limit: 5)
+    items = Repo.all(from i in Item, order_by: jaccard_distance(i.binary_embedding, ^<<1::1, 0::1, 1::1>>), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [2, 3, 1]
   end
 
