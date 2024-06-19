@@ -57,5 +57,23 @@ if Code.ensure_loaded?(Ecto) do
         fragment("(? <%> ?)", unquote(column), unquote(value))
       end
     end
+
+    @doc """
+    Returns the binary quantization
+    """
+    defmacro binary_quantize(value) do
+      quote do
+        fragment("binary_quantize(?)", unquote(value))
+      end
+    end
+
+    @doc """
+    Returns a subvector
+    """
+    defmacro subvector(value, start, count) do
+      quote do
+        fragment("subvector(?, ?, ?)", unquote(value), unquote(start), unquote(count))
+      end
+    end
   end
 end

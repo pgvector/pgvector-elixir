@@ -56,6 +56,16 @@ defmodule EctoTest do
     assert Enum.map(items, fn v -> v.id end) == [1, 3, 2]
   end
 
+  test "vector binary_quantize" do
+    item = Repo.one(first(from i in Item, select: binary_quantize(i.embedding)))
+    assert item == <<1::1, 1::1, 1::1>>
+  end
+
+  test "vector subvector" do
+    result = Repo.one(last(from i in Item, select: subvector(i.embedding, 2, 2)))
+    assert result |> Pgvector.to_list() == [1, 2]
+  end
+
   test "halfvec l2 distance" do
     items = Repo.all(from i in Item, order_by: l2_distance(i.half_embedding, ^Pgvector.HalfVector.new([1, 1, 1])), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [1, 3, 2]
@@ -80,6 +90,16 @@ defmodule EctoTest do
   test "halfvec l1 distance" do
     items = Repo.all(from i in Item, order_by: l1_distance(i.half_embedding, ^Pgvector.HalfVector.new([1, 1, 1])), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [1, 3, 2]
+  end
+
+  test "halfvec binary_quantize" do
+    item = Repo.one(first(from i in Item, select: binary_quantize(i.half_embedding)))
+    assert item == <<1::1, 1::1, 1::1>>
+  end
+
+  test "halfvec subvector" do
+    result = Repo.one(last(from i in Item, select: subvector(i.half_embedding, 2, 2)))
+    assert result |> Pgvector.to_list() == [1, 2]
   end
 
   test "bit hamming distance" do

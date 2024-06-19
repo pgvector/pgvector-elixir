@@ -4,6 +4,7 @@
 - Added support for `bit` type to Ecto
 - Added `Pgvector.extensions/0` function
 - Added `l1_distance`, `hamming_distance`, and `jaccard_distance` functions for Ecto
+- Added `binary_quantize` and `subvector` functions for Ecto
 - Dropped support for Elixir < 1.12
 
 ## 0.2.1 (2023-09-25)
