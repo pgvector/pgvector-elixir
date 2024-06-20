@@ -21,9 +21,24 @@ defmodule SparseVectorTest do
     assert [1.0, 0.0, 2.0, 0.0, 3.0, 0.0] == map |> Pgvector.SparseVector.new(6) |> Pgvector.to_list()
   end
 
+  test "dimensions" do
+    vector = Pgvector.SparseVector.new([1, 2, 3])
+    assert 3 == vector |> Pgvector.SparseVector.dimensions()
+  end
+
+  test "indices" do
+    vector = Pgvector.SparseVector.new([1, 2, 3])
+    assert [0, 1, 2] == vector |> Pgvector.SparseVector.indices()
+  end
+
+  test "values" do
+    vector = Pgvector.SparseVector.new([1, 2, 3])
+    assert [1, 2, 3] == vector |> Pgvector.SparseVector.values()
+  end
+
   test "inspect" do
     vector = Pgvector.SparseVector.new([1, 2, 3])
-    assert "Pgvector.SparseVector.new([1.0, 2.0, 3.0])" == inspect(vector)
+    assert "Pgvector.SparseVector.new(%{0 => 1.0, 1 => 2.0, 2 => 3.0}, 3)" == inspect(vector)
   end
 
   test "equals" do

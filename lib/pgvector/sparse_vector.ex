@@ -60,13 +60,51 @@ defmodule Pgvector.SparseVector do
   def from_binary(binary) when is_binary(binary) do
     %Pgvector.SparseVector{data: binary}
   end
+
+  @doc """
+  Returns the dimensions
+  """
+  def dimensions(vector) when is_struct(vector, Pgvector.SparseVector) do
+    <<dim::signed-32, _::binary>> = vector.data
+    dim
+  end
+
+  @doc """
+  Returns the indices
+  """
+  def indices(vector) when is_struct(vector, Pgvector.SparseVector) do
+    <<_::signed-32, nnz::signed-32, 0::signed-32, indices::binary-size(nnz)-unit(32),
+      _::binary-size(nnz)-unit(32)>> = vector.data
+
+    for <<v::signed-32 <- indices>>, do: v
+  end
+
+  @doc """
+  Returns the values
+  """
+  def values(vector) when is_struct(vector, Pgvector.SparseVector) do
+    <<_::signed-32, nnz::signed-32, 0::signed-32, _::binary-size(nnz)-unit(32),
+      values::binary-size(nnz)-unit(32)>> = vector.data
+
+    for <<v::float-32 <- values>>, do: v
+  end
 end
 
 defimpl Inspect, for: Pgvector.SparseVector do
   import Inspect.Algebra
 
   def inspect(vector, opts) do
-    # TODO improve
-    concat(["Pgvector.SparseVector.new(", Inspect.List.inspect(Pgvector.to_list(vector), opts), ")"])
+    dimensions = vector |> Pgvector.SparseVector.dimensions()
+    indices = vector |> Pgvector.SparseVector.indices()
+    values = vector |> Pgvector.SparseVector.values()
+    elements = Enum.zip(indices, values) |> Enum.into(%{})
+
+    concat([
+      "Pgvector.SparseVector.new(",
+      Inspect.Map.inspect(elements, opts),
+      ", ",
+      Inspect.Integer.inspect(dimensions, opts),
+      ")"
+    ])
   end
 end
