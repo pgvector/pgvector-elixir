@@ -49,7 +49,7 @@ end
 defimpl Inspect, for: Pgvector.HalfVector do
   import Inspect.Algebra
 
-  def inspect(vec, opts) do
-    concat(["Pgvector.HalfVector.new(", Inspect.List.inspect(Pgvector.to_list(vec), opts), ")"])
+  def inspect(vector, opts) do
+    concat(["Pgvector.HalfVector.new(", Inspect.List.inspect(Pgvector.to_list(vector), opts), ")"])
   end
 end

@@ -52,8 +52,8 @@ end
 defimpl Inspect, for: Pgvector.SparseVector do
   import Inspect.Algebra
 
-  def inspect(vec, opts) do
+  def inspect(vector, opts) do
     # TODO improve
-    concat(["Pgvector.SparseVector.new(", Inspect.List.inspect(Pgvector.to_list(vec), opts), ")"])
+    concat(["Pgvector.SparseVector.new(", Inspect.List.inspect(Pgvector.to_list(vector), opts), ")"])
   end
 end

@@ -134,7 +134,7 @@ end
 defimpl Inspect, for: Pgvector do
   import Inspect.Algebra
 
-  def inspect(vec, opts) do
-    concat(["Pgvector.new(", Inspect.List.inspect(Pgvector.to_list(vec), opts), ")"])
+  def inspect(vector, opts) do
+    concat(["Pgvector.new(", Inspect.List.inspect(Pgvector.to_list(vector), opts), ")"])
   end
 end
