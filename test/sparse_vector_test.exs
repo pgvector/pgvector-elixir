@@ -16,6 +16,11 @@ defmodule SparseVectorTest do
     assert tensor == tensor |> Pgvector.SparseVector.new() |> Pgvector.to_tensor()
   end
 
+  test "map" do
+    map = %{0 => 1.0, 2 => 2.0, 4 => 3.0}
+    assert [1.0, 0.0, 2.0, 0.0, 3.0, 0.0] == map |> Pgvector.SparseVector.new(6) |> Pgvector.to_list()
+  end
+
   test "inspect" do
     vector = Pgvector.SparseVector.new([1, 2, 3])
     assert "Pgvector.SparseVector.new([1.0, 2.0, 3.0])" == inspect(vector)

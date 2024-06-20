@@ -34,6 +34,19 @@ defmodule Pgvector.SparseVector do
     end
   end
 
+  @doc """
+  Creates a new sparse vector from a map
+  """
+  def new(map, dimensions) when is_map(map) do
+    {indices, values} =
+      map
+      |> Enum.sort_by(fn {k, _} -> k end)
+      |> Enum.filter(fn {_, v} -> v != 0 end)
+      |> Enum.unzip()
+
+    new(dimensions, indices, values)
+  end
+
   defp new(dim, indices, values) do
     nnz = indices |> length()
     indices = for v <- indices, into: "", do: <<v::signed-32>>
