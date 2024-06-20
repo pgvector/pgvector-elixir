@@ -17,7 +17,7 @@ defmodule SparseVectorTest do
   end
 
   test "map" do
-    map = %{0 => 1.0, 2 => 2.0, 4 => 3.0}
+    map = %{2 => 2.0, 4 => 3.0, 0 => 1.0, 3 => 0.0}
     vector = Pgvector.SparseVector.new(map, 6)
     assert [1.0, 0.0, 2.0, 0.0, 3.0, 0.0] == vector |> Pgvector.to_list()
     assert [0, 2, 4] == vector |> Pgvector.SparseVector.indices()
