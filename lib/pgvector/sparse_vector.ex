@@ -16,10 +16,7 @@ defmodule Pgvector.SparseVector do
       |> Enum.unzip()
 
     dim = list |> length()
-    nnz = indices |> length()
-    indices = for v <- indices, into: "", do: <<v::signed-32>>
-    values = for v <- values, into: "", do: <<v::float-32>>
-    from_binary(<<dim::signed-32, nnz::signed-32, 0::signed-32, indices::binary, values::binary>>)
+    new(dim, indices, values)
   end
 
   def new(%Pgvector.SparseVector{} = vector) do
@@ -35,6 +32,13 @@ defmodule Pgvector.SparseVector do
       # TODO improve
       new(tensor |> Nx.to_list())
     end
+  end
+
+  defp new(dim, indices, values) do
+    nnz = indices |> length()
+    indices = for v <- indices, into: "", do: <<v::signed-32>>
+    values = for v <- values, into: "", do: <<v::float-32>>
+    from_binary(<<dim::signed-32, nnz::signed-32, 0::signed-32, indices::binary, values::binary>>)
   end
 
   @doc """
