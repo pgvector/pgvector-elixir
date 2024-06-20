@@ -35,7 +35,7 @@ defmodule Pgvector.SparseVector do
   end
 
   @doc """
-  Creates a new sparse vector from a map
+  Creates a new sparse vector from a map of non-zero elements
   """
   def new(map, dimensions) when is_map(map) do
     {indices, values} =
