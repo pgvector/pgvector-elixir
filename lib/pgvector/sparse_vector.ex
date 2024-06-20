@@ -62,7 +62,7 @@ defmodule Pgvector.SparseVector do
   end
 
   @doc """
-  Returns the dimensions
+  Returns the number of dimensions
   """
   def dimensions(vector) when is_struct(vector, Pgvector.SparseVector) do
     <<dim::signed-32, _::binary>> = vector.data
