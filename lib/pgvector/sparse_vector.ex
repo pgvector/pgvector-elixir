@@ -9,13 +9,12 @@ defmodule Pgvector.SparseVector do
   Creates a new sparse vector from a list, tensor or sparse vector
   """
   def new(list) when is_list(list) do
-    indices =
+    {values, indices} =
       list
       |> Enum.with_index()
       |> Enum.filter(fn {v, _} -> v != 0 end)
-      |> Enum.map(fn {_, i} -> i end)
+      |> Enum.unzip()
 
-    values = list |> Enum.filter(fn v -> v != 0 end)
     dim = list |> length()
     nnz = indices |> length()
     indices = for v <- indices, into: "", do: <<v::signed-32>>
