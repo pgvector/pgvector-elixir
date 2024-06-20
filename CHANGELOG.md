@@ -1,5 +1,6 @@
 ## 0.3.0 (unreleased)
 
+- Lists must be converted to `Pgvector` structs for Ecto distance functions
 - Added support for `halfvec` and `sparsevec` types
 - Added support for `bit` type to Ecto
 - Added `Pgvector.extensions/0` function

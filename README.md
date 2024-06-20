@@ -96,7 +96,7 @@ Get the nearest neighbors
 import Ecto.Query
 import Pgvector.Ecto.Query
 
-Repo.all(from i in Item, order_by: l2_distance(i.embedding, [1, 2, 3]), limit: 5)
+Repo.all(from i in Item, order_by: l2_distance(i.embedding, ^Pgvector.new([1, 2, 3])), limit: 5)
 ```
 
 Also supports `max_inner_product` and `cosine_distance`
@@ -174,6 +174,18 @@ Postgrex.query!(pid, "CREATE INDEX ON items USING ivfflat (embedding vector_l2_o
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 ## Upgrading
+
+### 0.3.0 (unreleased)
+
+Lists must be converted to `Pgvector` structs for Ecto distance functions.
+
+```elixir
+# before
+l2_distance(i.embedding, [1, 2, 3])
+
+# after
+l2_distance(i.embedding, ^Pgvector.new([1, 2, 3]))
+```
 
 ### 0.2.0
 
