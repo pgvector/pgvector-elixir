@@ -74,6 +74,8 @@ create table(:items) do
 end
 ```
 
+Also supports `:halfvec` (unreleased), `:bit` (unreleased), and `:sparsevec` (unreleased)
+
 Update the model
 
 ```elixir
@@ -81,6 +83,8 @@ schema "items" do
   field :embedding, Pgvector.Ecto.Vector
 end
 ```
+
+Also supports `Pgvector.Ecto.HalfVector` (unreleased), `Pgvector.Ecto.Bit` (unreleased), and `Pgvector.Ecto.SparseVector` (unreleased)
 
 Insert a vector
 
@@ -99,7 +103,7 @@ import Pgvector.Ecto.Query
 Repo.all(from i in Item, order_by: l2_distance(i.embedding, ^Pgvector.new([1, 2, 3])), limit: 5)
 ```
 
-Also supports `max_inner_product` and `cosine_distance`
+Also supports `max_inner_product`, `cosine_distance`, `l1_distance` (unreleased), `hamming_distance` (unreleased), and `jaccard_distance` (unreleased)
 
 Convert a vector to a list or Nx tensor
 
