@@ -7,7 +7,7 @@ defmodule Pgvector.MixProject do
     [
       app: :pgvector,
       version: @version,
-      elixir: "~> 1.12",
+      elixir: "~> 1.13",
       deps: deps(),
       docs: docs(),
       package: package(),
