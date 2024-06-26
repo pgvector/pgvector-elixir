@@ -1,4 +1,4 @@
-Postgrex.Types.define(Example.PostgrexTypes, [Pgvector.Extensions.Vector], [])
+Postgrex.Types.define(Example.PostgrexTypes, Pgvector.extensions(), [])
 
 {:ok, pid} = Postgrex.start_link(database: "pgvector_example", types: Example.PostgrexTypes)
 

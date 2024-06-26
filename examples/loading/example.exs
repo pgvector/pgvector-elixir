@@ -5,7 +5,7 @@ IO.puts("Generating data")
 embeddings = Nx.broadcast(1, {rows, dimensions})
 
 # enable extension
-Postgrex.Types.define(Example.PostgrexTypes, [Pgvector.Extensions.Vector], [])
+Postgrex.Types.define(Example.PostgrexTypes, Pgvector.extensions(), [])
 {:ok, pid} = Postgrex.start_link(database: "pgvector_example", types: Example.PostgrexTypes)
 Postgrex.query!(pid, "CREATE EXTENSION IF NOT EXISTS vector", [])
 

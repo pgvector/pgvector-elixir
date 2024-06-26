@@ -29,7 +29,7 @@ Or check out an example:
 Create `lib/postgrex_types.ex` with:
 
 ```elixir
-Postgrex.Types.define(MyApp.PostgrexTypes, [Pgvector.Extensions.Vector] ++ Ecto.Adapters.Postgres.extensions(), [])
+Postgrex.Types.define(MyApp.PostgrexTypes, Pgvector.extensions() ++ Ecto.Adapters.Postgres.extensions(), [])
 ```
 
 And add to `config/config.exs`:
@@ -127,7 +127,7 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 [Register](https://github.com/elixir-ecto/postgrex#extensions) the extension
 
 ```elixir
-Postgrex.Types.define(MyApp.PostgrexTypes, [Pgvector.Extensions.Vector], [])
+Postgrex.Types.define(MyApp.PostgrexTypes, Pgvector.extensions(), [])
 ```
 
 And pass it to `start_link`
