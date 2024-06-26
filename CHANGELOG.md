@@ -1,4 +1,4 @@
-## 0.3.0 (unreleased)
+## 0.3.0 (2024-06-25)
 
 - Ecto distance functions no longer cast lists to vectors
 - Added support for `halfvec` and `sparsevec` types

@@ -11,7 +11,7 @@ Supports [Ecto](https://github.com/elixir-ecto/ecto) and [Postgrex](https://gith
 Add this line to your application’s `mix.exs` under `deps`:
 
 ```elixir
-{:pgvector, "~> 0.2.0"}
+{:pgvector, "~> 0.3.0"}
 ```
 
 And follow the instructions for your database library:
@@ -74,7 +74,7 @@ create table(:items) do
 end
 ```
 
-Also supports `:halfvec` (unreleased), `:bit` (unreleased), and `:sparsevec` (unreleased)
+Also supports `:halfvec`, `:bit`, and `:sparsevec`
 
 Update the model
 
@@ -84,7 +84,7 @@ schema "items" do
 end
 ```
 
-Also supports `Pgvector.Ecto.HalfVector` (unreleased), `Pgvector.Ecto.Bit` (unreleased), and `Pgvector.Ecto.SparseVector` (unreleased)
+Also supports `Pgvector.Ecto.HalfVector`, `Pgvector.Ecto.Bit`, and `Pgvector.Ecto.SparseVector`
 
 Insert a vector
 
@@ -103,7 +103,7 @@ import Pgvector.Ecto.Query
 Repo.all(from i in Item, order_by: l2_distance(i.embedding, ^Pgvector.new([1, 2, 3])), limit: 5)
 ```
 
-Also supports `max_inner_product`, `cosine_distance`, `l1_distance` (unreleased), `hamming_distance` (unreleased), and `jaccard_distance` (unreleased)
+Also supports `max_inner_product`, `cosine_distance`, `l1_distance`, `hamming_distance`, and `jaccard_distance`
 
 Convert a vector to a list or Nx tensor
 
@@ -179,7 +179,7 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 
 ## Upgrading
 
-### 0.3.0 (unreleased)
+### 0.3.0
 
 Lists must be converted to `Pgvector` structs for Ecto distance functions.
 
