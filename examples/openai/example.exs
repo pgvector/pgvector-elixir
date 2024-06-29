@@ -18,7 +18,7 @@ defmodule Example do
 
     data = %{
       "input" => input,
-      "model" => "text-embedding-ada-002"
+      "model" => "text-embedding-3-small"
     }
 
     response =
