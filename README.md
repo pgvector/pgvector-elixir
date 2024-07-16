@@ -22,6 +22,7 @@ And follow the instructions for your database library:
 Or check out an example:
 
 - [Embeddings](https://github.com/pgvector/pgvector-elixir/blob/master/examples/openai/example.exs) with OpenAI
+- [Binary embeddings](https://github.com/pgvector/pgvector-elixir/blob/master/examples/cohere/example.exs) with Cohere
 - [Bulk loading](https://github.com/pgvector/pgvector-elixir/blob/master/examples/loading/example.exs) with `COPY`
 
 ## Ecto
