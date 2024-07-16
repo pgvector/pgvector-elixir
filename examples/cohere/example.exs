@@ -53,7 +53,7 @@ end
 
 query = "forest"
 
-query_embedding = Enum.at(Example.fetch_embeddings([query], "search_query"), 0)
+query_embedding = Example.fetch_embeddings([query], "search_query") |> List.first()
 
 result =
   Postgrex.query!(
