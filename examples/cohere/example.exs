@@ -52,7 +52,6 @@ for {content, embedding} <- Enum.zip(input, embeddings) do
 end
 
 query = "forest"
-
 query_embedding = Example.fetch_embeddings([query], "search_query") |> List.first()
 
 result =
