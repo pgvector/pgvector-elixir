@@ -1,4 +1,4 @@
-rows = 100000
+rows = 100_000
 dimensions = 128
 
 IO.puts("Generating data")
@@ -17,7 +17,15 @@ defmodule Example do
   # https://www.postgresql.org/docs/current/sql-copy.html
   def copy(stream, rows) do
     signature = "PGCOPY\n\xFF\r\n\0"
-    Enum.into([<<signature::binary, 0::unsigned-32, 0::unsigned-32>>, Enum.map(rows, &copy_row(&1)), <<-1::unsigned-16>>], stream)
+
+    Enum.into(
+      [
+        <<signature::binary, 0::unsigned-32, 0::unsigned-32>>,
+        Enum.map(rows, &copy_row(&1)),
+        <<-1::unsigned-16>>
+      ],
+      stream
+    )
   end
 
   defp copy_row(row) do
@@ -35,15 +43,22 @@ end
 
 # load data
 IO.puts("Loading #{rows} rows")
-Postgrex.transaction(pid, fn(conn) ->
-  stream = Postgrex.stream(conn, "COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)", [])
-  rows = Enum.map(embeddings |> Nx.to_list(), fn v -> [v |> Pgvector.new()] end)
-  stream |> Example.copy(rows)
-end, timeout: 30000)
+
+Postgrex.transaction(
+  pid,
+  fn conn ->
+    stream = Postgrex.stream(conn, "COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)", [])
+    rows = Enum.map(embeddings |> Nx.to_list(), fn v -> [v |> Pgvector.new()] end)
+    stream |> Example.copy(rows)
+  end,
+  timeout: 30000
+)
+
 IO.puts("Success!")
 
 # create any indexes *after* loading initial data (skipping for this example)
 create_index = false
+
 if create_index do
   IO.puts("Creating index")
   Postgrex.query!(pid, "SET maintenance_work_mem = '8GB'", [])
