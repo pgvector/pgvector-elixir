@@ -43,10 +43,13 @@ end, timeout: 30000)
 IO.puts("Success!")
 
 # create any indexes *after* loading initial data (skipping for this example)
-# IO.puts("Creating index")
-# Postgrex.query!(pid, "SET maintenance_work_mem = '8GB'", [])
-# Postgrex.query!(pid, "SET max_parallel_maintenance_workers = 7", [])
-# Postgrex.query!(pid, "CREATE INDEX ON items USING hnsw (embedding vector_cosine_ops)", [])
+create_index = false
+if create_index do
+  IO.puts("Creating index")
+  Postgrex.query!(pid, "SET maintenance_work_mem = '8GB'", [])
+  Postgrex.query!(pid, "SET max_parallel_maintenance_workers = 7", [])
+  Postgrex.query!(pid, "CREATE INDEX ON items USING hnsw (embedding vector_cosine_ops)", [])
+end
 
 # update planner statistics for good measure
 Postgrex.query!(pid, "ANALYZE items", [])
