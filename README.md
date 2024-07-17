@@ -23,6 +23,7 @@ Or check out an example:
 
 - [Embeddings](https://github.com/pgvector/pgvector-elixir/blob/master/examples/openai/example.exs) with OpenAI
 - [Binary embeddings](https://github.com/pgvector/pgvector-elixir/blob/master/examples/cohere/example.exs) with Cohere
+- [Sentence embeddings](https://github.com/pgvector/pgvector-elixir/blob/master/examples/bumblebee/example.exs) with Bumblebee
 - [Bulk loading](https://github.com/pgvector/pgvector-elixir/blob/master/examples/loading/example.exs) with `COPY`
 
 ## Ecto
