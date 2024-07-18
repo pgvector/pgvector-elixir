@@ -71,10 +71,10 @@ LIMIT 5
 """
 
 query = "growling bear"
-embedding = Example.fetch_embeddings(model_info, tokenizer, [query]) |> List.first()
+query_embedding = Example.fetch_embeddings(model_info, tokenizer, [query]) |> List.first()
 k = 60
 
-result = Postgrex.query!(pid, sql, [query, embedding, k])
+result = Postgrex.query!(pid, sql, [query, query_embedding, k])
 
 for [id, rrf_score] <- result.rows do
   IO.puts("document: #{id}, RRF score: #{rrf_score}")
