@@ -61,11 +61,10 @@ query = "forest"
 query_embedding =
   Example.fetch_embeddings(model_info, tokenizer, [query])
   |> List.first()
-  |> Pgvector.SparseVector.new()
 
 result =
   Postgrex.query!(pid, "SELECT id, content FROM documents ORDER BY embedding <#> $1 LIMIT 5", [
-    query_embedding
+    query_embedding |> Pgvector.SparseVector.new()
   ])
 
 for [id, content] <- result.rows do
