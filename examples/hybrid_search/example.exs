@@ -13,10 +13,9 @@ Postgrex.query!(
 
 Postgrex.query!(pid, "CREATE INDEX ON documents USING GIN (to_tsvector('english', content))", [])
 
-{:ok, model_info} = Bumblebee.load_model({:hf, "sentence-transformers/multi-qa-MiniLM-L6-cos-v1"})
-
-{:ok, tokenizer} =
-  Bumblebee.load_tokenizer({:hf, "sentence-transformers/multi-qa-MiniLM-L6-cos-v1"})
+model_id = "sentence-transformers/multi-qa-MiniLM-L6-cos-v1"
+{:ok, model_info} = Bumblebee.load_model({:hf, model_id})
+{:ok, tokenizer} = Bumblebee.load_tokenizer({:hf, model_id})
 
 defmodule Example do
   def fetch_embeddings(model_info, tokenizer, input) do
