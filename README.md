@@ -25,6 +25,7 @@ Or check out an example:
 - [Binary embeddings](https://github.com/pgvector/pgvector-elixir/blob/master/examples/cohere/example.exs) with Cohere
 - [Sentence embeddings](https://github.com/pgvector/pgvector-elixir/blob/master/examples/bumblebee/example.exs) with Bumblebee
 - [Hybrid search](https://github.com/pgvector/pgvector-elixir/blob/master/examples/hybrid_search/example.exs) with Bumblebee (Reciprocal Rank Fusion)
+- [Sparse search](https://github.com/pgvector/pgvector-elixir/blob/master/examples/sparse_search/example.exs) with Bumblebee
 - [Bulk loading](https://github.com/pgvector/pgvector-elixir/blob/master/examples/loading/example.exs) with `COPY`
 
 ## Ecto
