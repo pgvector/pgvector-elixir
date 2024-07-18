@@ -11,11 +11,12 @@ Postgrex.query!(
   []
 )
 
-defmodule Example do
-  def fetch_embeddings(input) do
-    {:ok, model_info} = Bumblebee.load_model({:hf, "sentence-transformers/all-MiniLM-L6-v2"})
-    {:ok, tokenizer} = Bumblebee.load_tokenizer({:hf, "sentence-transformers/all-MiniLM-L6-v2"})
+model_id = "sentence-transformers/all-MiniLM-L6-v2"
+{:ok, model_info} = Bumblebee.load_model({:hf, model_id})
+{:ok, tokenizer} = Bumblebee.load_tokenizer({:hf, model_id})
 
+defmodule Example do
+  def fetch_embeddings(model_info, tokenizer, input) do
     serving =
       Bumblebee.Text.text_embedding(model_info, tokenizer,
         output_attribute: :hidden_state,
@@ -33,7 +34,7 @@ input = [
   "The bear is growling"
 ]
 
-embeddings = Example.fetch_embeddings(input)
+embeddings = Example.fetch_embeddings(model_info, tokenizer, input)
 
 for {content, embedding} <- Enum.zip(input, embeddings) do
   Postgrex.query!(pid, "INSERT INTO documents (content, embedding) VALUES ($1, $2)", [
