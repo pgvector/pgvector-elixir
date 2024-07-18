@@ -1,3 +1,7 @@
+# good resources
+# https://opensearch.org/blog/improving-document-retrieval-with-sparse-semantic-encoders/
+# https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-v1
+
 Postgrex.Types.define(Example.PostgrexTypes, Pgvector.extensions(), [])
 
 {:ok, pid} = Postgrex.start_link(database: "pgvector_example", types: Example.PostgrexTypes)
@@ -26,7 +30,11 @@ defmodule Example do
       )
 
     values = Nx.log(Nx.add(1, Nx.max(values, 0)))
+
     # TODO zero special tokens
+    # special_token_ids =
+    #   for t <- Bumblebee.Tokenizer.all_special_tokens(tokenizer),
+    #       do: Bumblebee.Tokenizer.token_to_id(tokenizer, t)
 
     # TODO improve
     values |> Nx.to_list()
