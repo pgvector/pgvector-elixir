@@ -19,7 +19,7 @@ And follow the instructions for your database library:
 - [Ecto](#ecto)
 - [Postgrex](#postgrex)
 
-Or check out an example:
+Or check out some examples:
 
 - [Embeddings](https://github.com/pgvector/pgvector-elixir/blob/master/examples/openai/example.exs) with OpenAI
 - [Binary embeddings](https://github.com/pgvector/pgvector-elixir/blob/master/examples/cohere/example.exs) with Cohere
