@@ -3,12 +3,12 @@ Postgrex.Types.define(Example.PostgrexTypes, Pgvector.extensions(), [])
 rows = 100_000
 dimensions = 128
 
-IO.puts("Generating random data")
+IO.puts("Generating data")
 
 key = Nx.Random.key(42)
-{embeddings, new_key} = Nx.Random.uniform(key, shape: {rows, dimensions})
-{categories, new_key} = Nx.Random.randint(new_key, 1, 100, shape: {rows})
-{queries, _new_key} = Nx.Random.uniform(new_key, shape: {10, dimensions})
+embeddings = Nx.iota({rows, dimensions})
+{categories, new_key} = Nx.Random.randint(key, 1, 100, shape: {rows})
+{queries, _new_key} = Nx.Random.choice(new_key, embeddings, samples: 10, axis: 0)
 
 # enable extensions
 {:ok, pid} = Postgrex.start_link(database: "pgvector_citus", types: Example.PostgrexTypes)
