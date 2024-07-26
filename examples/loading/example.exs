@@ -1,3 +1,5 @@
+Postgrex.Types.define(Example.PostgrexTypes, Pgvector.extensions(), [])
+
 rows = 100_000
 dimensions = 128
 
@@ -5,7 +7,6 @@ IO.puts("Generating data")
 embeddings = Nx.broadcast(1, {rows, dimensions})
 
 # enable extension
-Postgrex.Types.define(Example.PostgrexTypes, Pgvector.extensions(), [])
 {:ok, pid} = Postgrex.start_link(database: "pgvector_example", types: Example.PostgrexTypes)
 Postgrex.query!(pid, "CREATE EXTENSION IF NOT EXISTS vector", [])
 
@@ -34,7 +35,7 @@ defmodule Example do
     <<count::unsigned-16, data::binary>>
   end
 
-  defp copy_value(value) do
+  defp copy_value(value) when is_struct(value, Pgvector) do
     # TODO use extension and support other types
     data = value |> Pgvector.to_binary()
     <<IO.iodata_length(data)::unsigned-32, data::binary>>
