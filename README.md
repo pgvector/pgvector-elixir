@@ -238,5 +238,6 @@ To run an example:
 ```sh
 cd examples/loading
 mix deps.get
+createdb pgvector_example
 mix run example.exs
 ```
