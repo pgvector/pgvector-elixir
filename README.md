@@ -232,3 +232,11 @@ mix deps.get
 createdb pgvector_elixir_test
 mix test
 ```
+
+To run an example:
+
+```sh
+cd examples/loading
+mix deps.get
+mix run example.exs
+```
