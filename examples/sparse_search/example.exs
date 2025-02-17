@@ -20,7 +20,7 @@ model_id = "opensearch-project/opensearch-neural-sparse-encoding-v1"
 {:ok, tokenizer} = Bumblebee.load_tokenizer({:hf, model_id})
 
 defmodule Example do
-  def fetch_embeddings(model_info, tokenizer, input) do
+  def embed(model_info, tokenizer, input) do
     inputs = Bumblebee.apply_tokenizer(tokenizer, input)
     outputs = Axon.predict(model_info.model, model_info.params, inputs)
 
@@ -47,7 +47,7 @@ input = [
   "The bear is growling"
 ]
 
-embeddings = Example.fetch_embeddings(model_info, tokenizer, input)
+embeddings = Example.embed(model_info, tokenizer, input)
 
 for {content, embedding} <- Enum.zip(input, embeddings) do
   Postgrex.query!(pid, "INSERT INTO documents (content, embedding) VALUES ($1, $2)", [
@@ -59,7 +59,7 @@ end
 query = "forest"
 
 query_embedding =
-  Example.fetch_embeddings(model_info, tokenizer, [query])
+  Example.embed(model_info, tokenizer, [query])
   |> List.first()
 
 result =

@@ -18,7 +18,7 @@ model_id = "sentence-transformers/multi-qa-MiniLM-L6-cos-v1"
 {:ok, tokenizer} = Bumblebee.load_tokenizer({:hf, model_id})
 
 defmodule Example do
-  def fetch_embeddings(model_info, tokenizer, input) do
+  def embed(model_info, tokenizer, input) do
     serving =
       Bumblebee.Text.text_embedding(model_info, tokenizer,
         output_attribute: :hidden_state,
@@ -36,7 +36,7 @@ input = [
   "The bear is growling"
 ]
 
-embeddings = Example.fetch_embeddings(model_info, tokenizer, input)
+embeddings = Example.embed(model_info, tokenizer, input)
 
 for {content, embedding} <- Enum.zip(input, embeddings) do
   Postgrex.query!(pid, "INSERT INTO documents (content, embedding) VALUES ($1, $2)", [
@@ -70,7 +70,7 @@ LIMIT 5
 """
 
 query = "growling bear"
-query_embedding = Example.fetch_embeddings(model_info, tokenizer, [query]) |> List.first()
+query_embedding = Example.embed(model_info, tokenizer, [query]) |> List.first()
 k = 60
 
 result = Postgrex.query!(pid, sql, [query, query_embedding, k])

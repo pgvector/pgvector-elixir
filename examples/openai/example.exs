@@ -12,7 +12,7 @@ Postgrex.query!(
 )
 
 defmodule Example do
-  def fetch_embeddings(input) do
+  def embed(input) do
     api_key = System.fetch_env!("OPENAI_API_KEY")
     url = "https://api.openai.com/v1/embeddings"
 
@@ -38,7 +38,7 @@ input = [
   "The bear is growling"
 ]
 
-embeddings = Example.fetch_embeddings(input)
+embeddings = Example.embed(input)
 
 for {content, embedding} <- Enum.zip(input, embeddings) do
   Postgrex.query!(pid, "INSERT INTO documents (content, embedding) VALUES ($1, $2)", [
@@ -47,13 +47,14 @@ for {content, embedding} <- Enum.zip(input, embeddings) do
   ])
 end
 
-document_id = 1
+query = "forest"
+query_embedding = Example.embed([query]) |> List.first()
 
 result =
   Postgrex.query!(
     pid,
-    "SELECT id, content FROM documents WHERE id != $1 ORDER BY embedding <=> (SELECT embedding FROM documents WHERE id = $1) LIMIT 5",
-    [document_id]
+    "SELECT id, content FROM documents ORDER BY embedding <=> $1 LIMIT 5",
+    [query_embedding]
   )
 
 for [id, content] <- result.rows do

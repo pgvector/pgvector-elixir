@@ -12,7 +12,7 @@ Postgrex.query!(
 )
 
 defmodule Example do
-  def fetch_embeddings(texts, input_type) do
+  def embed(texts, input_type) do
     api_key = System.fetch_env!("CO_API_KEY")
     url = "https://api.cohere.com/v1/embed"
 
@@ -42,7 +42,7 @@ input = [
   "The bear is growling"
 ]
 
-embeddings = Example.fetch_embeddings(input, "search_document")
+embeddings = Example.embed(input, "search_document")
 
 for {content, embedding} <- Enum.zip(input, embeddings) do
   Postgrex.query!(pid, "INSERT INTO documents (content, embedding) VALUES ($1, $2)", [
@@ -52,7 +52,7 @@ for {content, embedding} <- Enum.zip(input, embeddings) do
 end
 
 query = "forest"
-query_embedding = Example.fetch_embeddings([query], "search_query") |> List.first()
+query_embedding = Example.embed([query], "search_query") |> List.first()
 
 result =
   Postgrex.query!(
