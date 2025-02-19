@@ -182,6 +182,113 @@ Postgrex.query!(pid, "CREATE INDEX ON items USING ivfflat (embedding vector_l2_o
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
+## Reference
+
+### Vectors
+
+Create a vector from a list
+
+```elixir
+vec = Pgvector.new([1, 2, 3])
+```
+
+Or an Nx tensor
+
+```elixir
+vec = Nx.tensor([1.0, 2.0, 3.0]) |> Pgvector.new()
+```
+
+Get a list
+
+```elixir
+list = vec |> Pgvector.to_list()
+```
+
+Get an Nx tensor
+
+```elixir
+tensor = vec |> Pgvector.to_tensor()
+```
+
+### Half Vectors
+
+Create a half vector from a list
+
+```elixir
+vec = Pgvector.HalfVector.new([1, 2, 3])
+```
+
+Or an Nx tensor
+
+```elixir
+vec = Nx.tensor([1.0, 2.0, 3.0], type: :f16) |>  Pgvector.HalfVector.new()
+```
+
+Get a list
+
+```elixir
+list = vec |> Pgvector.to_list()
+```
+
+Get an Nx tensor
+
+```elixir
+tensor = vec |> Pgvector.to_tensor()
+```
+
+### Sparse Vectors
+
+Create a sparse vector from a list
+
+```elixir
+vec = Pgvector.SparseVector.new([1, 2, 3])
+```
+
+Or an Nx tensor
+
+```elixir
+vec = Nx.tensor([1.0, 2.0, 3.0]) |> Pgvector.SparseVector.new()
+```
+
+Or a map of non-zero elements
+
+```elixir
+elements = %{0 => 1.0, 2 => 2.0, 4 => 3.0}
+vec = Pgvector.SparseVector.new(elements, 6)
+```
+
+Note: Indices start at 0
+
+Get the number of dimensions
+
+```elixir
+dim = vec |> Pgvector.SparseVector.dimensions()
+```
+
+Get the indices of non-zero elements
+
+```elixir
+indices = vec |> Pgvector.SparseVector.indices()
+```
+
+Get the values of non-zero elements
+
+```elixir
+values = vec |> Pgvector.SparseVector.values()
+```
+
+Get a list
+
+```elixir
+list = vec |> Pgvector.to_list()
+```
+
+Get an Nx tensor
+
+```elixir
+tensor = vec |> Pgvector.to_tensor()
+```
+
 ## Upgrading
 
 ### 0.3.0
