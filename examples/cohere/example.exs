@@ -7,18 +7,18 @@ Postgrex.query!(pid, "DROP TABLE IF EXISTS documents", [])
 
 Postgrex.query!(
   pid,
-  "CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1024))",
+  "CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1536))",
   []
 )
 
 defmodule Example do
   def embed(texts, input_type) do
     api_key = System.fetch_env!("CO_API_KEY")
-    url = "https://api.cohere.com/v1/embed"
+    url = "https://api.cohere.com/v2/embed"
 
     data = %{
       "texts" => texts,
-      "model" => "embed-english-v3.0",
+      "model" => "embed-v4.0",
       "input_type" => input_type,
       "embedding_types" => ["ubinary"]
     }
