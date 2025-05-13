@@ -303,20 +303,6 @@ l2_distance(i.embedding, [1, 2, 3])
 l2_distance(i.embedding, ^Pgvector.new([1, 2, 3]))
 ```
 
-### 0.2.0
-
-Vectors are now returned as `Pgvector` structs instead of lists. Get a list with:
-
-```elixir
-vector |> Pgvector.to_list()
-```
-
-or an Nx tensor with:
-
-```elixir
-vector |> Pgvector.to_tensor()
-```
-
 ## History
 
 View the [changelog](https://github.com/pgvector/pgvector-elixir/blob/master/CHANGELOG.md)
