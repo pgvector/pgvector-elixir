@@ -1,3 +1,7 @@
+## 0.3.1 (unreleased)
+
+- Added support for Elixir 1.19
+
 ## 0.3.0 (2024-06-25)
 
 - Ecto distance functions no longer cast lists to vectors
