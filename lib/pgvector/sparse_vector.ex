@@ -101,9 +101,9 @@ defimpl Inspect, for: Pgvector.SparseVector do
 
     concat([
       "Pgvector.SparseVector.new(",
-      Inspect.Map.inspect(elements, opts),
+      to_doc(elements, opts),
       ", ",
-      Inspect.Integer.inspect(dimensions, opts),
+      to_doc(dimensions, opts),
       ")"
     ])
   end
