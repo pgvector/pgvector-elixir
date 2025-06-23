@@ -1,4 +1,4 @@
-## 0.3.1 (unreleased)
+## 0.3.1 (2025-06-23)
 
 - Added support for Elixir 1.19
 
