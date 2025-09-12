@@ -32,6 +32,15 @@ if Code.ensure_loaded?(Ecto) do
     end
 
     @doc """
+    Returns the cosine similarity
+    """
+    defmacro cosine_similarity(left, right) do
+      quote do
+        fragment("1 - (? <=> ?)", unquote(left), unquote(right))
+      end
+    end
+
+    @doc """
     Returns the L1 distance
     """
     defmacro l1_distance(left, right) do

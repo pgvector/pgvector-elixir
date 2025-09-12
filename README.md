@@ -108,7 +108,7 @@ import Pgvector.Ecto.Query
 Repo.all(from i in Item, order_by: l2_distance(i.embedding, ^Pgvector.new([1, 2, 3])), limit: 5)
 ```
 
-Also supports `max_inner_product`, `cosine_distance`, `l1_distance`, `hamming_distance`, and `jaccard_distance`
+Also supports `max_inner_product`, `cosine_distance` (and it's complement `cosine_similarity`), `l1_distance`, `hamming_distance`, and `jaccard_distance`
 
 Convert a vector to a list or Nx tensor
 
@@ -125,7 +125,7 @@ create index("items", ["embedding vector_l2_ops"], using: :hnsw)
 create index("items", ["embedding vector_l2_ops"], using: :ivfflat, options: "lists = 100")
 ```
 
-Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance and cosine similarity
 
 ## Postgrex
 
@@ -180,7 +180,7 @@ Postgrex.query!(pid, "CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)
 Postgrex.query!(pid, "CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", [])
 ```
 
-Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance and cosine similarity
 
 ## Reference
 

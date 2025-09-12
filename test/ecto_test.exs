@@ -46,7 +46,7 @@ defmodule EctoTest do
   end
 
   test "vector cosine similarity" do
-    items = Repo.all(from i in Item, order_by: (1 - cosine_distance(i.embedding, ^Pgvector.new([1, 1, 1]))), limit: 5)
+    items = Repo.all(from i in Item, order_by: cosine_similarity(i.embedding, ^Pgvector.new([1, 1, 1])), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [3, 2, 1]
   end
 
@@ -72,7 +72,7 @@ defmodule EctoTest do
   end
 
   test "halfvec cosine similarity" do
-    items = Repo.all(from i in Item, order_by: (1 - cosine_distance(i.half_embedding, ^Pgvector.HalfVector.new([1, 1, 1]))), limit: 5)
+    items = Repo.all(from i in Item, order_by: cosine_similarity(i.half_embedding, ^Pgvector.HalfVector.new([1, 1, 1])), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [3, 2, 1]
   end
 
@@ -108,7 +108,7 @@ defmodule EctoTest do
   end
 
   test "sparsevec cosine similarity" do
-    items = Repo.all(from i in Item, order_by: (1 - cosine_distance(i.sparse_embedding, ^Pgvector.SparseVector.new([1, 1, 1]))), limit: 5)
+    items = Repo.all(from i in Item, order_by: cosine_similarity(i.sparse_embedding, ^Pgvector.SparseVector.new([1, 1, 1])), limit: 5)
     assert Enum.map(items, fn v -> v.id end) == [3, 2, 1]
   end
 
