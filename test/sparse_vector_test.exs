@@ -35,7 +35,7 @@ defmodule SparseVectorTest do
 
   test "values" do
     vector = Pgvector.SparseVector.new([1, 0, 2, 0, 3, 0])
-    assert [1, 2, 3] == vector |> Pgvector.SparseVector.values()
+    assert [1.0, 2.0, 3.0] == vector |> Pgvector.SparseVector.values()
   end
 
   test "inspect" do
