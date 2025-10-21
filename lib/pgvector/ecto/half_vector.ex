@@ -2,6 +2,8 @@ if Code.ensure_loaded?(Ecto) do
   defmodule Pgvector.Ecto.HalfVector do
     use Ecto.Type
 
+    @type t :: Pgvector.HalfVector.t()
+
     def type, do: :halfvec
 
     def cast(value) do

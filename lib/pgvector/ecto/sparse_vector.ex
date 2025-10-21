@@ -2,6 +2,8 @@ if Code.ensure_loaded?(Ecto) do
   defmodule Pgvector.Ecto.SparseVector do
     use Ecto.Type
 
+    @type t :: Pgvector.SparseVector.t()
+
     def type, do: :sparsevec
 
     def cast(value) do

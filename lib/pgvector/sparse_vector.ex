@@ -3,6 +3,11 @@ defmodule Pgvector.SparseVector do
   A sparse vector struct for pgvector
   """
 
+  @typedoc """
+  A sparse vector
+  """
+  @type t :: %Pgvector.SparseVector{data: binary()}
+
   defstruct [:data]
 
   @doc """

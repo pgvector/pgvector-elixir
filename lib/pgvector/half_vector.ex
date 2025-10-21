@@ -3,6 +3,11 @@ defmodule Pgvector.HalfVector do
   A half vector struct for pgvector
   """
 
+  @typedoc """
+  A half vector
+  """
+  @type t :: %Pgvector.HalfVector{data: binary()}
+
   defstruct [:data]
 
   @doc """

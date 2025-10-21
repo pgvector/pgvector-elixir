@@ -2,7 +2,7 @@ if Code.ensure_loaded?(Ecto) do
   defmodule Pgvector.Ecto.Vector do
     use Ecto.Type
 
-    @type t :: %Pgvector{data: binary()}
+    @type t :: Pgvector.t()
 
     def type, do: :vector
 

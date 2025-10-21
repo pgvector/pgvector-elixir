@@ -3,6 +3,11 @@ defmodule Pgvector do
   A vector struct for pgvector
   """
 
+  @typedoc """
+  A vector
+  """
+  @type t :: %Pgvector{data: binary()}
+
   defstruct [:data]
 
   @doc """
