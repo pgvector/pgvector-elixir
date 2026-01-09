@@ -289,20 +289,6 @@ Get an Nx tensor
 tensor = vec |> Pgvector.to_tensor()
 ```
 
-## Upgrading
-
-### 0.3.0
-
-Lists must be converted to `Pgvector` structs for Ecto distance functions.
-
-```elixir
-# before
-l2_distance(i.embedding, [1, 2, 3])
-
-# after
-l2_distance(i.embedding, ^Pgvector.new([1, 2, 3]))
-```
-
 ## History
 
 View the [changelog](https://github.com/pgvector/pgvector-elixir/blob/master/CHANGELOG.md)
