@@ -1,6 +1,7 @@
-## 0.3.2 (unreleased)
+## 0.4.0 (unreleased)
 
 - Added typespecs
+- Dropped support for Elixir < 1.15
 
 ## 0.3.1 (2025-06-23)
 
