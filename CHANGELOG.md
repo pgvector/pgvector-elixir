@@ -1,4 +1,4 @@
-## 0.4.0 (unreleased)
+## 0.4.0 (2026-06-04)
 
 - Added typespecs
 - Dropped support for Elixir < 1.16

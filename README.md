@@ -11,7 +11,7 @@ Supports [Ecto](https://github.com/elixir-ecto/ecto) and [Postgrex](https://gith
 Add this line to your application’s `mix.exs` under `deps`:
 
 ```elixir
-{:pgvector, "~> 0.3.0"}
+{:pgvector, "~> 0.4.0"}
 ```
 
 And follow the instructions for your database library:
