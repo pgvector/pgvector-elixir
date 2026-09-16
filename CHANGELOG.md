@@ -1,3 +1,7 @@
+## 0.4.1 (unreleased)
+
+- Added support for Nx 1
+
 ## 0.4.0 (2026-06-04)
 
 - Added typespecs
