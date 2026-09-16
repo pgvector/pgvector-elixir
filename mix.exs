@@ -21,7 +21,7 @@ defmodule Pgvector.MixProject do
     [
       {:postgrex, ">= 0.0.0"},
       {:ecto, "~> 3.0", optional: true},
-      {:nx, "~> 0.5", optional: true},
+      {:nx, "~> 0.5 or ~> 1.0", optional: true},
       {:ecto_sql, "~> 3.0", only: :test},
       {:ex_doc, "~> 0.14", only: :dev, runtime: false}
     ]
