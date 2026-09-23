@@ -1,4 +1,8 @@
-Postgrex.Types.define(EctoApp.PostgrexTypes, Pgvector.extensions() ++ Ecto.Adapters.Postgres.extensions(), [])
+Postgrex.Types.define(
+  EctoApp.PostgrexTypes,
+  Pgvector.extensions() ++ Ecto.Adapters.Postgres.extensions(),
+  []
+)
 
 defmodule Repo do
   use Ecto.Repo,
