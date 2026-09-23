@@ -78,8 +78,8 @@ defmodule Pgvector.SparseVector do
   Returns the non-zero indices
   """
   def indices(vector) when is_struct(vector, Pgvector.SparseVector) do
-    <<_::signed-32, nnz::signed-32, 0::signed-32, indices::binary-size(nnz)-unit(32),
-      _::binary-size(nnz)-unit(32)>> = vector.data
+    <<_::signed-32, nnz::signed-32, 0::signed-32, indices::binary-size(nnz)-unit(32), _::binary-size(nnz)-unit(32)>> =
+      vector.data
 
     for <<v::signed-32 <- indices>>, do: v
   end
@@ -88,8 +88,8 @@ defmodule Pgvector.SparseVector do
   Returns the non-zero values
   """
   def values(vector) when is_struct(vector, Pgvector.SparseVector) do
-    <<_::signed-32, nnz::signed-32, 0::signed-32, _::binary-size(nnz)-unit(32),
-      values::binary-size(nnz)-unit(32)>> = vector.data
+    <<_::signed-32, nnz::signed-32, 0::signed-32, _::binary-size(nnz)-unit(32), values::binary-size(nnz)-unit(32)>> =
+      vector.data
 
     for <<v::float-32 <- values>>, do: v
   end
