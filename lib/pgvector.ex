@@ -84,8 +84,17 @@ defmodule Pgvector do
 
     indices = for <<v::signed-32 <- indices>>, do: v
     values = for <<v::float-32 <- values>>, do: v
-    list = List.duplicate(0.0, dim)
-    Enum.zip_reduce(indices, values, list, fn x, y, acc -> List.replace_at(acc, x, y) end)
+    sparse_to_dense(0, dim, indices, values)
+  end
+
+  defp sparse_to_dense(dim, dim, _indices, _values), do: []
+
+  defp sparse_to_dense(i, dim, [i | indices], [v | values]) do
+    [v | sparse_to_dense(i + 1, dim, indices, values)]
+  end
+
+  defp sparse_to_dense(i, dim, indices, values) do
+    [0.0 | sparse_to_dense(i + 1, dim, indices, values)]
   end
 
   if Code.ensure_loaded?(Nx) do
@@ -103,8 +112,27 @@ defmodule Pgvector do
     end
 
     def to_tensor(vector) when is_struct(vector, Pgvector.SparseVector) do
-      # TODO improve
-      vector |> to_list() |> Nx.tensor(type: :f32)
+      <<dim::signed-32, nnz::signed-32, 0::signed-32, indices::binary-size(nnz)-unit(32),
+        values::binary-size(nnz)-unit(32)>> = vector.data
+
+      indices = for <<v::signed-32 <- indices>>, do: v
+      values = for <<v::float-32 <- values>>, do: v
+
+      0
+      |> sparse_to_dense_binary(dim, indices, values, [])
+      |> Nx.from_binary(:f32)
+    end
+
+    defp sparse_to_dense_binary(dim, dim, _indices, _values, acc) do
+      acc |> Enum.reverse() |> IO.iodata_to_binary()
+    end
+
+    defp sparse_to_dense_binary(i, dim, [i | indices], [v | values], acc) do
+      sparse_to_dense_binary(i + 1, dim, indices, values, [<<v::float-32-native>> | acc])
+    end
+
+    defp sparse_to_dense_binary(i, dim, indices, values, acc) do
+      sparse_to_dense_binary(i + 1, dim, indices, values, [<<0.0::float-32-native>> | acc])
     end
 
     defp f32_big_to_native(binary) do

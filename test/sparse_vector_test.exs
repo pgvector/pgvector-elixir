@@ -16,6 +16,23 @@ defmodule SparseVectorTest do
     assert tensor == tensor |> Pgvector.SparseVector.new() |> Pgvector.to_tensor()
   end
 
+  test "to_list with non-zero at last index" do
+    assert [0.0, 0.0, 1.5] == Pgvector.SparseVector.new(%{2 => 1.5}, 3) |> Pgvector.to_list()
+  end
+
+  test "to_list with zero dimensions" do
+    assert [] == Pgvector.SparseVector.new(%{}, 0) |> Pgvector.to_list()
+  end
+
+  test "to_list with no non-zero elements" do
+    assert [0.0, 0.0, 0.0] == Pgvector.SparseVector.new(%{}, 3) |> Pgvector.to_list()
+  end
+
+  test "to_tensor with non-zero at last index" do
+    tensor = Pgvector.SparseVector.new(%{2 => 1.5}, 3) |> Pgvector.to_tensor()
+    assert Nx.tensor([0.0, 0.0, 1.5], type: :f32) == tensor
+  end
+
   test "map" do
     map = %{2 => 2.0, 4 => 3.0, 0 => 1.0, 3 => 0.0}
     vector = Pgvector.SparseVector.new(map, 6)
