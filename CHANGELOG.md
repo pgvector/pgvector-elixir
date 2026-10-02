@@ -1,3 +1,7 @@
+## 0.4.2 (unreleased)
+
+- Improved performance of `to_list` and `to_tensor` functions for sparse vectors
+
 ## 0.4.1 (2026-09-16)
 
 - Added support for Nx 1
