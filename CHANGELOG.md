@@ -1,4 +1,4 @@
-## 0.4.2 (unreleased)
+## 0.4.2 (2026-10-02)
 
 - Improved performance of `to_list` and `to_tensor` functions for sparse vectors
 
