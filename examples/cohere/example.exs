@@ -7,7 +7,7 @@ Postgrex.query!(pid, "DROP TABLE IF EXISTS documents", [])
 
 Postgrex.query!(
   pid,
-  "CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1536))",
+  "CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(2048))",
   []
 )
 
@@ -18,7 +18,7 @@ defmodule Example do
 
     data = %{
       "texts" => texts,
-      "model" => "embed-v4.0",
+      "model" => "embed-v5.0-pro",
       "input_type" => input_type,
       "embedding_types" => ["ubinary"]
     }
